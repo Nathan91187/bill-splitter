@@ -15,18 +15,50 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return loading? Loading(): Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.amber,
+        title: Text("Bill Splitter"),
         actions: [
           ElevatedButton.icon(
-              onPressed: () async{
-                setState(() {
-                  loading = true;
-                });
-            await auth.signOut();
-          },
-              label: Text("SignOut"),
-              icon: Icon(Icons.person),
+            onPressed: () async {
+            },
+            label: Text(
+              "Add Bill",
+              style: TextStyle(
+                  color: Colors.black
+              ),
+            ),
+            icon: Icon(
+              Icons.add,
+              color: Colors.black,
+            ),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.amber,
+                elevation: 0
+            ),
+          ),
+          ElevatedButton.icon(
+            onPressed: () async {
+              setState(() {
+                loading = true;
+              });
+              auth.signOut();
+            },
+            label: Text(
+              "Sign Out",
+              style: TextStyle(
+                  color: Colors.black
+              ),
+            ),
+            icon: Icon(
+              Icons.person,
+              color: Colors.black,
+            ),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.amber,
+                elevation: 0
+            ),
           )
         ],
       ),
