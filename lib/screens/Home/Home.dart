@@ -1,5 +1,6 @@
 import 'package:bill_splitter/services/auth.dart';
 import 'package:bill_splitter/shared/loading.dart';
+import 'package:bill_splitter/widgets/add_bill_form.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -14,6 +15,17 @@ class _HomeState extends State<Home> {
   bool loading = false;
   @override
   Widget build(BuildContext context) {
+    void showBillForm(){
+      showModalBottomSheet(context: context, builder: (context) {
+        return SingleChildScrollView(
+          child: Container(
+            color: Colors.black,
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: AddBillForm(),
+          ),
+        );
+      });
+    }
     return loading? Loading(): Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -22,6 +34,7 @@ class _HomeState extends State<Home> {
         actions: [
           ElevatedButton.icon(
             onPressed: () async {
+               showBillForm();
             },
             label: Text(
               "Add Bill",
