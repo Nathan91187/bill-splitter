@@ -1,5 +1,6 @@
 import 'package:bill_splitter/firebase_options.dart';
 import 'package:bill_splitter/models/user.dart';
+import 'package:bill_splitter/providers/bill_provider.dart';
 import 'package:bill_splitter/services/auth.dart';
 import 'package:bill_splitter/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,15 +27,19 @@ class BillSplitter extends StatelessWidget {
             secondary: Colors.amber
         )
     );
-    return StreamProvider<UserModel?>.value (
-        value: AuthService().user,
-        initialData: null,
-        child: MaterialApp(
-          home: Wrapper(),
-
+    return MultiProvider(
+      providers: [
+        StreamProvider<UserModel?>.value(
+          value: AuthService().user,
+          initialData: null,
         ),
-
+        ChangeNotifierProvider(
+          create: (context) => BillProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        home: Wrapper(),
+      ),
     );
-
 }
 }
