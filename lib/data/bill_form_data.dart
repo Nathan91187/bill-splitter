@@ -12,6 +12,28 @@ class BillFormData {
     }
   ];
   List <TextEditingController> participants = [TextEditingController()];
+  void fromBill(Bill bill){
+    titleController.text = bill.title;
+    expenseFields = bill.expenses.map((expense) {
+      return {
+        'name' : TextEditingController(
+          text: expense.description
+        ),
+        'price' : TextEditingController(
+          text: expense.price.toString()
+        ),
+        'quantity' : TextEditingController(
+          text: expense.quantity.toString()
+        )
+      };
+    }
+    ).toList();
+    participants = bill.participants.map((participant) {
+      return TextEditingController(
+          text: participant.name
+      );
+    }).toList();
+  }
   void addParticipantField(){
       participants.add(
           TextEditingController()

@@ -1,5 +1,3 @@
-
-
 import 'package:bill_splitter/data/bill_form_data.dart';
 import 'package:bill_splitter/providers/bill_provider.dart';
 import 'package:bill_splitter/shared/common.dart';
