@@ -16,7 +16,15 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     void showBillForm(){
-      showModalBottomSheet(context: context, builder: (context) {
+      showModalBottomSheet(context: context,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadiusGeometry.vertical(top: Radius.circular(8)),
+            side: BorderSide(
+              color: Colors.amber,
+              width: 2
+            )
+          )
+          ,builder: (context) {
         return SingleChildScrollView(
           child: Container(
             color: Colors.black,
