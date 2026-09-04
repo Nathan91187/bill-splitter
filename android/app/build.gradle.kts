@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.nate.bill_splitter"
+    namespace = "com.example.bill_splitter"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
