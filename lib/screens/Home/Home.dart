@@ -1,6 +1,7 @@
 import 'package:bill_splitter/services/auth.dart';
 import 'package:bill_splitter/shared/loading.dart';
 import 'package:bill_splitter/widgets/add_bill_form.dart';
+import 'package:bill_splitter/widgets/billList.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -17,6 +18,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     void showBillForm(){
       showModalBottomSheet(context: context,
+          backgroundColor: Colors.black,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadiusGeometry.vertical(top: Radius.circular(8)),
             side: BorderSide(
@@ -26,10 +28,13 @@ class _HomeState extends State<Home> {
           )
           ,builder: (context) {
         return SingleChildScrollView(
-          child: Container(
-            color: Colors.black,
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: AddBillForm(),
+          child: SafeArea(
+            top: false,
+            child: Container(
+              color: Colors.black,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: AddBillForm(),
+            ),
           ),
         );
       });
@@ -40,25 +45,6 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.amber,
         title: Text("Bill Splitter"),
         actions: [
-          ElevatedButton.icon(
-            onPressed: () async {
-               showBillForm();
-            },
-            label: Text(
-              "Add Bill",
-              style: TextStyle(
-                  color: Colors.black
-              ),
-            ),
-            icon: Icon(
-              Icons.add,
-              color: Colors.black,
-            ),
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber,
-                elevation: 0
-            ),
-          ),
           ElevatedButton.icon(
             onPressed: () async {
               setState(() {
@@ -85,7 +71,24 @@ class _HomeState extends State<Home> {
       ),
       body: Container(
         padding: EdgeInsets.all(20),
-        child: Text("hello"),
+        child: BillList()
+      ),
+      floatingActionButton: FloatingActionButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: BorderSide(
+            color: Colors.amber,
+                width: 3
+          )
+        ),
+        onPressed: () async {
+          showBillForm();
+        },
+            backgroundColor: Colors.black,
+            child: Icon(
+              Icons.add,
+              color: Colors.amber,
+            ),
       ),
     );
   }
