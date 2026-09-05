@@ -11,7 +11,7 @@ class BillCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Navigator.pushNamed(context, 'routeName',arguments: bill);
+        Navigator.pushNamed(context, 'edit_bill',arguments: bill);
       },
       child: Card(
         color: Colors.black,
