@@ -57,7 +57,9 @@ class BillFormData {
   }
   Bill createBill(String uid){
     List <Expense> expenses = [];
-    List <Participant> participantList = [];
+    List <Participant> participantList = [
+      Participant(name: "You")
+    ];
     double totalAmount = 0;
     for(final expense in expenseFields){
       final price = double.parse(expense['price']!.text);
@@ -69,9 +71,16 @@ class BillFormData {
       participantList.add(Participant(name: participant.text));
     }
     return Bill(
-        billID: "not assigned so far", createdAt: DateTime.now(), creatorID: uid, expenses: expenses, participants: participantList, title: titleController.text, totalAmount: totalAmount);
+        billID: "not assigned so far",
+        createdAt: DateTime.now(),
+        creatorID: uid,
+        expenses: expenses,
+        participants: participantList,
+        title: titleController.text,
+        totalAmount: totalAmount);
 
   }
+
   void dispose(){
     for(final expense in expenseFields){
       expense['name']?.dispose();
