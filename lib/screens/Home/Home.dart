@@ -1,6 +1,6 @@
 import 'package:bill_splitter/services/auth.dart';
 import 'package:bill_splitter/shared/loading.dart';
-import 'package:bill_splitter/widgets/add_bill_form.dart';
+import 'package:bill_splitter/screens/Home/add_bill_form.dart';
 import 'package:bill_splitter/widgets/billList.dart';
 import 'package:flutter/material.dart';
 
@@ -16,36 +16,13 @@ class _HomeState extends State<Home> {
   bool loading = false;
   @override
   Widget build(BuildContext context) {
-    void showBillForm(){
-      showModalBottomSheet(context: context,
-          backgroundColor: Colors.black,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadiusGeometry.vertical(top: Radius.circular(8)),
-            side: BorderSide(
-              color: Colors.amber,
-              width: 2
-            )
-          )
-          ,builder: (context) {
-        return SingleChildScrollView(
-          child: SafeArea(
-            top: false,
-            child: Container(
-              color: Colors.black,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: AddBillForm(),
-            ),
-          ),
-        );
-      });
-    }
     return loading? Loading(): Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.grey,
         title: Text("Bill Splitter"),
         actions: [
-          ElevatedButton.icon(
+          FilledButton.icon(
             onPressed: () async {
               setState(() {
                 loading = true;
@@ -62,8 +39,8 @@ class _HomeState extends State<Home> {
               Icons.person,
               color: Colors.black,
             ),
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber,
+            style: FilledButton.styleFrom(
+                backgroundColor: Colors.grey,
                 elevation: 0
             ),
           )
@@ -82,7 +59,11 @@ class _HomeState extends State<Home> {
           )
         ),
         onPressed: () async {
-          showBillForm();
+          Navigator.push(
+              context, MaterialPageRoute(
+              builder: (context) => AddBillForm()
+          )
+          );
         },
             backgroundColor: Colors.black,
             child: Icon(
