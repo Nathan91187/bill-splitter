@@ -2,7 +2,7 @@ import 'package:bill_splitter/firebase_options.dart';
 import 'package:bill_splitter/models/user.dart';
 import 'package:bill_splitter/providers/bill_provider.dart';
 import 'package:bill_splitter/services/auth.dart';
-import 'package:bill_splitter/widgets/add_bill_form.dart';
+import 'package:bill_splitter/screens/Home/add_bill_form.dart';
 import 'package:bill_splitter/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +40,7 @@ class BillSplitter extends StatelessWidget {
       ],
       child: MaterialApp(
         routes: {
-          'edit_bill' : (context) => AddBillForm()
+          'edit_bill' : (context) => AddBillForm(),
         },
         home: Wrapper(),
       ),
