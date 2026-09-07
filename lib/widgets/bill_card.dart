@@ -1,3 +1,4 @@
+import 'package:bill_splitter/data/currency_map.dart';
 import 'package:bill_splitter/models/bill.dart';
 import 'package:bill_splitter/screens/Home/bill_details.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +10,14 @@ class BillCard extends StatelessWidget {
   });
 
   @override
+
   Widget build(BuildContext context) {
+    final currencyMap = CurrencyMap();
     return InkWell(
       onTap: (){
         Navigator.push(context, MaterialPageRoute(
             builder: (context) => BillDetails(
-                bill: bill
+                billID: bill.billID
             )
         )
         );
@@ -60,7 +63,7 @@ class BillCard extends StatelessWidget {
                 flex: 3,
                   child: Center(
                     child: Text(
-                      "\$${bill.totalAmount.toStringAsFixed(2)}",
+                      "${currencyMap.currencyMap[bill.currency]} ${bill.totalAmount.toStringAsFixed(1)}",
                       style: TextStyle(
                         color: Colors.amber,
                         fontSize: 30,
@@ -93,6 +96,7 @@ class BillCard extends StatelessWidget {
                             ),
                             SizedBox(width: 6),
                             Text(
+                              bill.participants.length == 1 ? "1 Participant" :
                                 "${bill.participants.length} Participants",
                               style: TextStyle(
                                   fontWeight: FontWeight.w500
