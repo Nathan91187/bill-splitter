@@ -2,6 +2,8 @@ import 'package:bill_splitter/data/bill_form_data.dart';
 import 'package:bill_splitter/models/bill.dart';
 import 'package:bill_splitter/providers/bill_provider.dart';
 import 'package:bill_splitter/shared/common.dart';
+import 'package:bill_splitter/shared/loading.dart';
+import 'package:bill_splitter/widgets/currency_dropdown.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +24,7 @@ class _AddBillFormState extends State<AddBillForm> {
   final _formKey = GlobalKey<FormState>();
   final billFormData = BillFormData();
   final uid = FirebaseAuth.instance.currentUser!.uid;
-
+  bool loading = false;
   @override
   void initState() {
     super.initState();
@@ -38,22 +40,14 @@ class _AddBillFormState extends State<AddBillForm> {
     super.dispose();
   }
 
-  void submitBill() {
+  Future <void> submitBill() async {
     final billProvider = context.read<BillProvider>();
-
-    if (widget.bill == null) {
-      billProvider.addBill(
-        billFormData.createBill(uid),
-      );
-    } else {
-      billProvider.updateBill(
-        billFormData.createBill(uid),
-      );
+      await billProvider.addBill(
+        billFormData.createBill(uid,widget.bill));
+    if(mounted){
+      Navigator.pop(context);
     }
-
-    Navigator.pop(context);
   }
-
   Widget sectionHeader({
     required IconData icon,
     required String title,
@@ -87,7 +81,7 @@ class _AddBillFormState extends State<AddBillForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
       backgroundColor: Colors.black87,
       appBar: AppBar(
         backgroundColor: Colors.grey,
@@ -142,6 +136,12 @@ class _AddBillFormState extends State<AddBillForm> {
                   ),
                 ),
 
+                const SizedBox(height: 28),
+                  sectionHeader(
+                      icon: Icons.attach_money,
+                      title: "Currency"),
+                  const SizedBox(height: 12),
+                  CurrencyDropdown(billFormData: billFormData),
                 const SizedBox(height: 28),
                 sectionHeader(
                   icon: Icons.shopping_bag_outlined,
@@ -399,7 +399,11 @@ class _AddBillFormState extends State<AddBillForm> {
                   height: 50,
                   child: FilledButton.icon(
                     onPressed: () {
+
                       if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          loading = true;
+                        });
                         submitBill();
                       }
                     },
