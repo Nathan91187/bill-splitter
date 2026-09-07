@@ -1,3 +1,4 @@
+import 'package:bill_splitter/data/currency_map.dart';
 import 'package:bill_splitter/models/bill.dart';
 import 'package:bill_splitter/providers/bill_provider.dart';
 import 'package:bill_splitter/screens/Home/add_bill_form.dart';
@@ -5,10 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class BillDetails extends StatelessWidget {
-  final Bill bill;
-
-  const BillDetails({super.key, required this.bill});
-
+  final String billID;
+  const BillDetails({super.key, required this.billID});
   void confirmDelete(BuildContext context) {
     showDialog(
       context: context,
@@ -52,7 +51,7 @@ class BillDetails extends StatelessWidget {
             ),
             FilledButton(
               onPressed: () {
-                context.read<BillProvider>().removeBill(bill.billID);
+                context.read<BillProvider>().removeBill(billID);
                 Navigator.pop(dialogContext);
                 Navigator.pop(context);
               },
@@ -95,6 +94,9 @@ class BillDetails extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
+    final billList = Provider.of<BillProvider>(context).billList;
+    Bill bill = billList.firstWhere((test) => test.billID == billID);
+    final currencyMap = CurrencyMap();
     return Scaffold(
       backgroundColor: Colors.black87,
       appBar: AppBar(
@@ -143,7 +145,7 @@ class BillDetails extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    "\$${bill.totalAmount.toStringAsFixed(2)}",
+                    "${currencyMap.currencyMap[bill.currency]} ${bill.totalAmount.toStringAsFixed(2)}",
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 34,
@@ -155,7 +157,6 @@ class BillDetails extends StatelessWidget {
 
               const SizedBox(height: 28),
               sectionHeader(icon: Icons.shopping_bag_outlined, title: "Items"),
-
               const SizedBox(height: 12),
 
               Container(
@@ -210,7 +211,7 @@ class BillDetails extends StatelessWidget {
                                       const SizedBox(height: 3),
                                       Text(
                                         "${expense.quantity} × "
-                                        "\$${expense.price.toStringAsFixed(2)}",
+                                        "${currencyMap.currencyMap[bill.currency]} ${expense.price.toStringAsFixed(2)}",
                                         style: const TextStyle(
                                           color: Colors.white54,
                                           fontSize: 13,
@@ -221,7 +222,7 @@ class BillDetails extends StatelessWidget {
                                 ),
 
                                 Text(
-                                  "\$${(expense.price * expense.quantity).toStringAsFixed(2)}",
+                                  "${currencyMap.currencyMap[bill.currency]} ${(expense.price * expense.quantity).toStringAsFixed(2)}",
                                   style: const TextStyle(
                                     color: Colors.amber,
                                     fontSize: 15,
@@ -285,7 +286,7 @@ class BillDetails extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  "\$ ${(bill.totalAmount / bill.participants.length).toStringAsFixed(2)}",
+                                  "${currencyMap.currencyMap[bill.currency]} ${(bill.totalAmount / bill.participants.length).toStringAsFixed(2)}",
                                   style: TextStyle(
                                     color: Colors.amber,
                                     fontWeight: FontWeight.w600
