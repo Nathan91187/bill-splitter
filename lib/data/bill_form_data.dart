@@ -4,6 +4,7 @@ import 'package:bill_splitter/models/participant.dart';
 import 'package:flutter/material.dart';
 
 class BillFormData {
+  String currency = "ETB";
   TextEditingController titleController = TextEditingController();
   List<Map<String, TextEditingController>> expenseFields = [
     {'name': TextEditingController(),
@@ -13,6 +14,7 @@ class BillFormData {
   ];
   List <TextEditingController> participants = [TextEditingController()];
   void fromBill(Bill bill){
+    currency = bill.currency;
     titleController.text = bill.title;
     expenseFields = bill.expenses.map((expense) {
       return {
@@ -55,11 +57,11 @@ class BillFormData {
     if(expenseFields.length > 1){
     expenseFields.removeAt(index);}
   }
-  Bill createBill(String uid){
+  Bill createBill(String uid, Bill? bill){
     List <Expense> expenses = [];
-    List <Participant> participantList = [
+    List <Participant> participantList = bill == null ? [
       Participant(name: "You")
-    ];
+    ] : [];
     double totalAmount = 0;
     for(final expense in expenseFields){
       final price = double.parse(expense['price']!.text);
@@ -71,13 +73,15 @@ class BillFormData {
       participantList.add(Participant(name: participant.text));
     }
     return Bill(
-        billID: "not assigned so far",
-        createdAt: DateTime.now(),
+        billID: bill == null ? "" : bill.billID,
+        createdAt: bill == null ? DateTime.now() : bill.createdAt,
         creatorID: uid,
         expenses: expenses,
         participants: participantList,
         title: titleController.text,
-        totalAmount: totalAmount);
+        totalAmount: totalAmount,
+      currency: currency
+    );
 
   }
 
