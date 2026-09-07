@@ -10,7 +10,65 @@ class Home extends StatefulWidget {
   @override
   State<Home> createState() => _HomeState();
 }
-
+void confirmLogout(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (dialogContext) {
+      return AlertDialog(
+        backgroundColor: const Color(0xFF111111),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: const BorderSide(color: Colors.amber, width: 1.5),
+        ),
+        title: const Row(
+          children: [
+            Icon(Icons.logout, color: Colors.amber),
+            SizedBox(width: 10),
+            Text(
+              "Logout?",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        content: const Text(
+          "Are you sure you want to logout",
+          style: TextStyle(color: Colors.white70, height: 1.4),
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+            },
+            style: FilledButton.styleFrom(
+                backgroundColor: Colors.grey
+            ),
+            child: const Text(
+              "Cancel",
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              AuthService().signOut();
+            },
+            style: FilledButton.styleFrom(
+              backgroundColor: Colors.amber,
+              foregroundColor: Colors.black,
+            ),
+            child: const Text(
+              "Logout",
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
 class _HomeState extends State<Home> {
   final auth = AuthService();
   bool loading = false;
@@ -21,30 +79,70 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         backgroundColor: Colors.grey,
         title: Text("Bill Splitter"),
-        actions: [
-          FilledButton.icon(
-            onPressed: () async {
-              setState(() {
-                loading = true;
-              });
-              auth.signOut();
-            },
-            label: Text(
-              "Sign Out",
-              style: TextStyle(
-                  color: Colors.black
+        leading: Builder(
+            builder: (context) {
+              return IconButton(
+                  onPressed: (){
+                    Scaffold.of(context).openDrawer();
+                  },
+                  icon: Icon(Icons.menu));
+
+            }),
+      ),
+      drawer: Drawer(
+        backgroundColor: Colors.black,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+                child: Text(
+                    "Bill Splitter",
+                  style: TextStyle(
+                      color: Colors.amber,
+                    fontWeight: FontWeight.w600
+                  ),
+                )),
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.amber.withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.group, color: Colors.amber, size: 20),
               ),
+              title: Text(
+                  "Groups",
+                  style: TextStyle(
+                    color: Colors.amber,
+                    fontWeight: FontWeight.w600
+                  ),
+              ),
+              onTap: (){},
             ),
-            icon: Icon(
-              Icons.person,
-              color: Colors.black,
-            ),
-            style: FilledButton.styleFrom(
-                backgroundColor: Colors.grey,
-                elevation: 0
-            ),
-          )
-        ],
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.amber.withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.logout, color: Colors.amber, size: 20),
+              ),
+              title: Text(
+                  "Logout",
+                style: TextStyle(
+                    color: Colors.amber,
+                  fontWeight: FontWeight.w600
+                ),
+              ),
+              onTap: (){
+                Navigator.pop(context);
+                confirmLogout(context);
+              },
+            )
+          ],
+        ),
       ),
       body: Container(
         padding: EdgeInsets.all(20),
