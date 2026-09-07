@@ -28,7 +28,7 @@ class _RegisterState extends State<Register> {
     return loading? Loading(): Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.grey,
         title: Text("Register"),
         actions: [
           ElevatedButton.icon(
@@ -46,7 +46,7 @@ class _RegisterState extends State<Register> {
                 color: Colors.black,
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.amber,
+              backgroundColor: Colors.grey,
               elevation: 0
             ),
           )
@@ -59,36 +59,68 @@ class _RegisterState extends State<Register> {
           child: Column(
             children: [
               SizedBox(height: 20),
-              TextFormField(
-                  onChanged: (val) => email = val,
-                  decoration: textFieldDecoration.copyWith(hintText: "Email"),
-                validator: (val) {
-                    if(val == null || val.isEmpty){
-                      return "Email can't be empty";
-                    }
-                    return null;
-                },
+              Container(
+                margin: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF111111),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.amber,
+                  )
+                ),
+                child: TextFormField(
+                    onChanged: (val) => email = val,
+                    decoration: textFieldDecoration.copyWith(hintText: "Email"),
+                  validator: (val) {
+                      if(val == null || val.isEmpty){
+                        return "Email can't be empty";
+                      }
+                      final emailRegex = RegExp(
+                        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                      );
+
+                      if (!emailRegex.hasMatch(val.trim())) {
+                        return "Enter a valid email";
+                      }
+                      return null;
+
+                  },
+                ),
               ),
               SizedBox(height: 20),
-              TextFormField(
-                obscureText: true,
-                onChanged: (val) => password = val,
-                decoration: textFieldDecoration.copyWith(hintText: "Password"),
-                validator: (val) {
-                  if (val == null || val.length < 6){
-                    return "Please enter a password longer than 5 characters";
-                  }
-                  return null;
-                },
+              Container(
+                margin: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF111111),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.amber,
+                  )
+                ),
+                child: TextFormField(
+                  obscureText: true,
+                  onChanged: (val) => password = val,
+                  decoration: textFieldDecoration.copyWith(hintText: "Password"),
+                  validator: (val) {
+                    if (val == null || val.trim().length < 6){
+                      return "Please enter a password longer than 5 characters";
+                    }
+                    return null;
+                  },
+                ),
               ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
-                      setState((){
-                    loading = true;
-                  });
+
                   if(_formkey.currentState!.validate()) {
-                    final user = await auth.register(email, password);
+                    setState((){
+                      loading = true;
+                      error = '';
+                    });
+                    final user = await auth.register(email.trim(), password);
                   if(user == null) {
                     setState(() {
                       loading = false;
