@@ -10,6 +10,7 @@ class Bill {
   final List<Participant> participants;
   final DateTime createdAt;
   final double totalAmount;
+  final String currency;
   const Bill({
     required this.billID,
     required this.createdAt,
@@ -18,6 +19,7 @@ class Bill {
     this.groupID,
     required this.participants,
     required this.title,
-    required this.totalAmount
+    required this.totalAmount,
+    required this.currency
 });
 }
