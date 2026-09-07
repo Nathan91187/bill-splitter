@@ -3,10 +3,13 @@ import 'package:bill_splitter/models/user.dart';
 import 'package:bill_splitter/providers/bill_provider.dart';
 import 'package:bill_splitter/services/auth.dart';
 import 'package:bill_splitter/screens/Home/add_bill_form.dart';
+import 'package:bill_splitter/services/bill_service.dart';
 import 'package:bill_splitter/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'models/bill.dart';
 
 Future <void> main()async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +37,8 @@ class BillSplitter extends StatelessWidget {
           value: AuthService().user,
           initialData: null,
         ),
+        StreamProvider<List<Bill>>.value(
+            value: BillService().bills, initialData: []),
         ChangeNotifierProvider(
           create: (context) => BillProvider(),
         ),
