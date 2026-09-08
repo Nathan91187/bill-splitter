@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:bill_splitter/models/bill.dart';
-import 'package:bill_splitter/models/participant.dart';
-import 'package:bill_splitter/services/auth.dart';
 import 'package:bill_splitter/services/bill_service.dart';
 import 'package:flutter/material.dart';
 class BillProvider extends ChangeNotifier{
