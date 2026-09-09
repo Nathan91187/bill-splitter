@@ -291,9 +291,29 @@ class BillDetails extends StatelessWidget {
                                     color: Colors.amber,
                                     fontWeight: FontWeight.w600
                                   ),
-                                )
+                                ),
+                                SizedBox(width: 5,),
+                                if(index != 0)
+                                Container(
+                                  decoration: BoxDecoration(
+                                   borderRadius: BorderRadius.circular(4),
+                                    color: participant.hasPaid ? Colors.amber.withOpacity(0.12) : Colors.grey.withOpacity(0.12),
+                                  ),
+
+                                  padding: EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                                  child: Text(
+                                    participant.hasPaid ? 'Paid' : 'Not paid',
+                                    style: TextStyle(
+                                      color: participant.hasPaid
+                                          ? Colors.amber
+                                          : Colors.grey,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
+
                           ),
 
                           if (index != bill.participants.length - 1)
