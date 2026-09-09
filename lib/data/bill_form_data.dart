@@ -1,3 +1,4 @@
+import 'package:bill_splitter/data/participant_field.dart';
 import 'package:bill_splitter/models/bill.dart';
 import 'package:bill_splitter/models/expense.dart';
 import 'package:bill_splitter/models/participant.dart';
@@ -12,7 +13,10 @@ class BillFormData {
       'quantity' : TextEditingController(),
     }
   ];
-  List <TextEditingController> participants = [TextEditingController()];
+  List <ParticipantField> participants = [ParticipantField(
+      textEditingController: TextEditingController(),
+  )];
+
   void fromBill(Bill bill){
     currency = bill.currency;
     titleController.text = bill.title;
@@ -31,14 +35,19 @@ class BillFormData {
     }
     ).toList();
     participants = bill.participants.map((participant) {
-      return TextEditingController(
-          text: participant.name
+      return ParticipantField(
+          textEditingController: TextEditingController(
+            text: participant.name
+          ),
+        hasPaid: participant.hasPaid
       );
     }).toList();
   }
   void addParticipantField(){
       participants.add(
-          TextEditingController()
+          ParticipantField(
+              textEditingController: TextEditingController(),
+          )
       );
   }
   void removeParticipantField(int index){
@@ -57,10 +66,13 @@ class BillFormData {
     if(expenseFields.length > 1){
     expenseFields.removeAt(index);}
   }
+  void toggleHasPaid(int index){
+    participants[index].hasPaid = !participants[index].hasPaid;
+  }
   Bill createBill(String uid, Bill? bill){
     List <Expense> expenses = [];
     List <Participant> participantList = bill == null ? [
-      Participant(name: "You")
+      Participant(name: "You", hasPaid: false)
     ] : [];
     double totalAmount = 0;
     for(final expense in expenseFields){
@@ -70,7 +82,7 @@ class BillFormData {
       totalAmount +=  price * quantity;
     }
     for(final participant in participants){
-      participantList.add(Participant(name: participant.text));
+      participantList.add(Participant(name: participant.textEditingController.text,hasPaid: participant.hasPaid));
     }
     return Bill(
         billID: bill == null ? "" : bill.billID,
@@ -92,7 +104,7 @@ class BillFormData {
       expense['quantity']?.dispose();
     }
     for(final participant in participants){
-      participant.dispose();
+      participant.textEditingController.dispose();
     }
     participants.clear();
   }
