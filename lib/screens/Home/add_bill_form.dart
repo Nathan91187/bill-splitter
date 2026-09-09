@@ -330,7 +330,7 @@ class _AddBillFormState extends State<AddBillForm> {
                         children: [
                           Expanded(
                             child: TextFormField(
-                              controller: participant,
+                              controller: participant.textEditingController,
                               validator: (val) {
                                 if (val == null ||
                                     val.trim().isEmpty) {
@@ -361,6 +361,39 @@ class _AddBillFormState extends State<AddBillForm> {
                                 Icons.delete_outline,
                                 color: Colors.amber,
                               ),
+                            ),
+                          if(widget.bill != null)
+                          if (index != 0)
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Checkbox(
+                                  activeColor: Colors.grey,
+                                  checkColor: Colors.black,
+                                  visualDensity: VisualDensity.compact,
+                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  value: billFormData.participants[index].hasPaid,
+                                  onChanged: (_) {
+                                    setState(() {
+                                      billFormData.toggleHasPaid(index);
+                                    });
+                                  },
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.amber.withOpacity(0.12),
+                                    borderRadius: BorderRadius.circular(4)
+                                  ),
+                                  padding: EdgeInsets.all(2),
+                                  child: const Text(
+                                    'Paid',
+                                    style: TextStyle(
+                                      color: Colors.amber,
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                         ],
                       ),
@@ -399,7 +432,6 @@ class _AddBillFormState extends State<AddBillForm> {
                   height: 50,
                   child: FilledButton.icon(
                     onPressed: () {
-
                       if (_formKey.currentState!.validate()) {
                         setState(() {
                           loading = true;
