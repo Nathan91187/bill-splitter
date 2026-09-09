@@ -37,16 +37,12 @@ class BillSplitter extends StatelessWidget {
           value: AuthService().user,
           initialData: null,
         ),
-        StreamProvider<List<Bill>>.value(
-            value: BillService().bills, initialData: []),
-        ChangeNotifierProvider(
-          create: (context) => BillProvider(),
-        ),
+
+          // StreamProvider<List<Bill>>.value(
+          //     value: BillService().bills, initialData: []),
+
       ],
       child: MaterialApp(
-        routes: {
-          'edit_bill' : (context) => AddBillForm(),
-        },
         home: Wrapper(),
       ),
     );
