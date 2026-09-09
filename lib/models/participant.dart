@@ -1,6 +1,8 @@
 class Participant {
   final String name;
-  const Participant({
-    required this.name
+  bool hasPaid;
+   Participant({
+    required this.name,
+      required this.hasPaid,
 });
 }
