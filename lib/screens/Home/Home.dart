@@ -1,8 +1,10 @@
+import 'package:bill_splitter/providers/bill_provider.dart';
 import 'package:bill_splitter/services/auth.dart';
 import 'package:bill_splitter/shared/loading.dart';
 import 'package:bill_splitter/screens/Home/add_bill_form.dart';
 import 'package:bill_splitter/widgets/billList.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -74,11 +76,17 @@ class _HomeState extends State<Home> {
   bool loading = false;
   @override
   Widget build(BuildContext context) {
+    final billList = Provider.of<BillProvider>(context).billList;
     return loading? Loading(): Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.grey,
-        title: Text("Bill Splitter"),
+        title: Text(
+            "Bill Splitter",
+            style: TextStyle(
+              fontWeight: FontWeight.w600
+            ),
+        ),
         leading: Builder(
             builder: (context) {
               return IconButton(
@@ -94,7 +102,9 @@ class _HomeState extends State<Home> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
+            Container(
+              height: 100,
+                padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
                 child: Text(
                     "Bill Splitter",
                   style: TextStyle(
@@ -144,7 +154,25 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-      body: Container(
+      body: billList.isEmpty ? Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.receipt_long_outlined,
+              color: Colors.grey.withOpacity(0.25),
+              size: 60,
+            ),
+            Text(
+                "No Bills to Show",
+                style: TextStyle(
+                  color: Colors.grey.withOpacity(0.25),
+                  fontSize: 20
+                ),
+            )
+          ],
+        ),
+      ) : Container(
         padding: EdgeInsets.all(20),
         child: BillList()
       ),
