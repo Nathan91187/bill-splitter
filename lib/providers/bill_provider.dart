@@ -20,12 +20,11 @@ class BillProvider extends ChangeNotifier{
     super.dispose();
 
   }
-
-
   Future <void> addBill(Bill bill) async {
     return await billService.saveBill(bill);
   }
   Future<void> removeBill(String billID) async{
    return await billService.removeBill(billID);
   }
+
 }
