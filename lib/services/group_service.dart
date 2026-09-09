@@ -1,0 +1,33 @@
+import 'package:bill_splitter/models/bill_group.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+class GroupService {
+  final groupCollection = FirebaseFirestore.instance.collection('groups');
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+  List<BillGroup> _groupListFromSnapshot(QuerySnapshot snapshot){
+    return snapshot.docs.map((groups){
+      return BillGroup(
+          creatorID: groups['creator_id'],
+          groupID: groups.id,
+          groupName: groups['name'],
+          memberIDs: List<String>.from(groups['member_ids']));
+    }).toList();
+  }
+  Stream<List<BillGroup>> get groups{
+    return groupCollection.where('member_ids',arrayContains: uid).snapshots().map(_groupListFromSnapshot);
+  }
+  Future<void> saveGroup(BillGroup group) async{
+    final docRef = group.groupID == null ? groupCollection.doc() : groupCollection.doc(group.groupID!);
+    return await docRef.set(
+      {
+        'creator_id' : uid,
+        'name': group.groupName,
+        'member_ids' : group.memberIDs
+      }
+    );
+  }
+  Future<void> removeGroup(String groupID) async{
+     await groupCollection.doc(groupID).delete();
+  }
+}
