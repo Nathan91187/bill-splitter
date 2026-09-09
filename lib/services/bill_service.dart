@@ -1,10 +1,12 @@
 import 'package:bill_splitter/models/expense.dart';
 import 'package:bill_splitter/models/participant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../models/bill.dart';
 
 class BillService {
   final billCollection = FirebaseFirestore.instance.collection("bills");
+  final uid = FirebaseAuth.instance.currentUser!.uid;
   Future <void> saveBill(Bill bill) async {
     final docRef = bill.billID.isEmpty ?  billCollection.doc() : billCollection.doc(bill.billID);
    await docRef.set({
@@ -12,7 +14,8 @@ class BillService {
       'creator_id' : bill.creatorID,
       'participants' : bill.participants.map((participant){
         return {
-          'name' : participant.name
+          'name' : participant.name,
+          'has_paid' : participant.hasPaid
         };
       }).toList(),
       'expenses' : bill.expenses.map((expense){
@@ -38,22 +41,24 @@ class BillService {
           creatorID: doc['creator_id'],
           expenses: (doc['expenses'] as List).map((expense) {
             return Expense(
-                price: expense['price'],
+                price: (expense['price'] as num).toDouble(),
                 description: expense['name'],
                 quantity: expense['quantity']);
           }).toList() ,
           participants: (doc['participants'] as List).map((participant){
             return Participant(
-                name: participant['name']);
+                name: participant['name'],
+                hasPaid: participant['has_paid']
+            );
           }).toList(),
           title: doc['title'],
-          totalAmount: doc['total'],
+          totalAmount: (doc['total'] as num).toDouble(),
           currency: doc['currency']
       );
     }).toList();
   }
   Stream <List<Bill>> get bills{
-    return billCollection.snapshots().map(_billListFromSnapshot);
+    return billCollection.where('creator_id' , isEqualTo: uid).snapshots().map(_billListFromSnapshot);
 
   }
   }
