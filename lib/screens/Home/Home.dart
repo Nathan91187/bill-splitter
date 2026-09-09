@@ -1,8 +1,9 @@
 import 'package:bill_splitter/providers/bill_provider.dart';
+import 'package:bill_splitter/screens/Home/groups.dart';
 import 'package:bill_splitter/services/auth.dart';
 import 'package:bill_splitter/shared/loading.dart';
 import 'package:bill_splitter/screens/Home/add_bill_form.dart';
-import 'package:bill_splitter/widgets/billList.dart';
+import 'package:bill_splitter/widgets/bill_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -128,7 +129,11 @@ class _HomeState extends State<Home> {
                     fontWeight: FontWeight.w600
                   ),
               ),
-              onTap: (){},
+              onTap: (){
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Groups()));
+              },
             ),
             ListTile(
               leading: Container(
