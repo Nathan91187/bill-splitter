@@ -1,5 +1,6 @@
 import 'package:bill_splitter/models/user.dart';
 import 'package:bill_splitter/providers/bill_provider.dart';
+import 'package:bill_splitter/providers/group_provider.dart';
 import 'package:bill_splitter/screens/Home/Home.dart';
 import 'package:bill_splitter/screens/authentication/authenticate.dart';
 import 'package:bill_splitter/services/bill_service.dart';
@@ -17,11 +18,17 @@ class Wrapper extends StatelessWidget {
     if(user == null){
       return Authenticate();
     }
-    return
-          ChangeNotifierProvider(
-            create: (_) => BillProvider(),
-            child: MaterialApp(
-              home: const Home(),
-            ));
+    return MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (_) => BillProvider(),
+
+                ),
+              ChangeNotifierProvider(
+                  create: (_) => GroupProvider())
+            ],
+                child: MaterialApp(
+                home: const Home(),
+          ));
   }
 }
