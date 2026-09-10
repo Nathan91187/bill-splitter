@@ -21,25 +21,7 @@ class Groups extends StatelessWidget {
           ),
         ),
             ),
-      body: groupList.isEmpty ? Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.group_outlined,
-              color: Colors.grey.withOpacity(0.25),
-              size: 60,
-            ),
-            Text(
-              "No Groups Yet",
-              style: TextStyle(
-                  color: Colors.grey.withOpacity(0.25),
-                  fontSize: 20
-              ),
-            )
-          ],
-        ),
-      ) : GroupList()
+      body:  GroupList()
       );
   }
 }
