@@ -1,6 +1,8 @@
+import 'package:bill_splitter/data/auth_errors.dart';
 import 'package:bill_splitter/screens/authentication/authenticate.dart';
 import 'package:bill_splitter/services/auth.dart';
 import 'package:bill_splitter/shared/common.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/loading.dart';
@@ -29,7 +31,12 @@ class _RegisterState extends State<Register> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.grey,
-        title: Text("Register"),
+        title: Text(
+            "Register",
+            style: TextStyle(
+              fontWeight: FontWeight.w600
+            ),
+        ),
         actions: [
           ElevatedButton.icon(
           onPressed: (){
@@ -114,19 +121,19 @@ class _RegisterState extends State<Register> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
-
                   if(_formkey.currentState!.validate()) {
                     setState((){
                       loading = true;
                       error = '';
                     });
-                    final user = await auth.register(email.trim(), password);
-                  if(user == null) {
-                    setState(() {
-                      loading = false;
-                      error = "Please enter valid credentials";
-                    });
-                  }
+                    try {
+                      await auth.register(email.trim(), password);
+                    }on FirebaseAuthException catch (e) {
+                      setState(() {
+                        loading = false;
+                        error = AuthErrors().authErrorMessages[e.code] ?? 'Something went wrong. Please try again.';
+                      });
+                    }
                 }},
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.amber

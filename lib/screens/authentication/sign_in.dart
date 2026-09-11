@@ -1,7 +1,9 @@
 import 'package:bill_splitter/services/auth.dart';
 import 'package:bill_splitter/shared/common.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../data/auth_errors.dart';
 import '../../shared/loading.dart';
 
 class SignIn extends StatefulWidget {
@@ -26,7 +28,12 @@ class _SignInState extends State<SignIn> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.grey,
-        title: Text("Sign in"),
+        title: Text(
+            "Sign in",
+            style: TextStyle(
+              fontWeight: FontWeight.w600
+            ),
+        ),
         actions: [
          ElevatedButton.icon(
           onPressed: (){
@@ -112,12 +119,13 @@ class _SignInState extends State<SignIn> {
                        setState((){
                          loading = true;
                        });
-                       final user = await auth.signInWithEmailAndPassword(email, password);
-                       if(user == null){
-                          setState(() {
-                            loading = false;
-                            error = "User Not Found";
-                          });
+                       try {
+                         await auth.signInWithEmailAndPassword(email.trim(), password);
+                       }on FirebaseAuthException catch (e) {
+                         setState(() {
+                           loading = false;
+                           error = AuthErrors().authErrorMessages[e.code] ?? 'Something went wrong. Please try again.';
+                         });
                        }
                      }
                    },
