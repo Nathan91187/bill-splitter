@@ -1,4 +1,5 @@
 import 'package:bill_splitter/models/bill_group.dart';
+import 'package:bill_splitter/screens/groups/group_details.dart';
 import 'package:flutter/material.dart';
 
 class GroupCard extends StatelessWidget {
@@ -13,6 +14,11 @@ class GroupCard extends StatelessWidget {
     return Column(
       children: [
         InkWell(
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(
+                builder: (context)=> GroupDetails(billGroup: billGroup))
+            );
+          },
           child: ListTile(
             minTileHeight: 50,
             contentPadding: EdgeInsets.all(5),
