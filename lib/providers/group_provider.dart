@@ -10,11 +10,13 @@ class GroupProvider extends ChangeNotifier{
   GroupService groupService = GroupService();
   StreamSubscription<List<BillGroup>>? _groupSubscription;
   GroupProvider(){
+
     _groupSubscription = GroupService().groups.listen((groups){
       groupList = groups;
       notifyListeners();
     });
   }
+  @override
   void dispose(){
     super.dispose();
     _groupSubscription?.cancel();

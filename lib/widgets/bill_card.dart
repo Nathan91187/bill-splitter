@@ -1,6 +1,6 @@
 import 'package:bill_splitter/data/currency_map.dart';
 import 'package:bill_splitter/models/bill.dart';
-import 'package:bill_splitter/screens/Home/bill_details.dart';
+import 'package:bill_splitter/screens/bill_details.dart';
 import 'package:flutter/material.dart';
 class BillCard extends StatelessWidget {
   final Bill bill;

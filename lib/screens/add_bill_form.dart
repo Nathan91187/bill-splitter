@@ -8,12 +8,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/section_header.dart';
+
 class AddBillForm extends StatefulWidget {
   final Bill? bill;
-
+  final String? groupID;
   const AddBillForm({
     super.key,
     this.bill,
+    this.groupID
   });
 
   @override
@@ -41,6 +44,9 @@ class _AddBillFormState extends State<AddBillForm> {
   }
 
   Future <void> submitBill() async {
+    setState(() {
+      loading = true;
+    });
     final billProvider = context.read<BillProvider>();
       await billProvider.addBill(
         billFormData.createBill(uid,widget.bill));
@@ -48,36 +54,7 @@ class _AddBillFormState extends State<AddBillForm> {
       Navigator.pop(context);
     }
   }
-  Widget sectionHeader({
-    required IconData icon,
-    required String title,
-  }) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.amber.withOpacity(0.12),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            icon,
-            color: Colors.amber,
-            size: 20,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Text(
-          title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +81,7 @@ class _AddBillFormState extends State<AddBillForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                sectionHeader(
+                SectionHeader(
                   icon: Icons.receipt_long_outlined,
                   title: "Bill Information",
                 ),
@@ -137,13 +114,13 @@ class _AddBillFormState extends State<AddBillForm> {
                 ),
 
                 const SizedBox(height: 28),
-                  sectionHeader(
+                  SectionHeader(
                       icon: Icons.attach_money,
                       title: "Currency"),
                   const SizedBox(height: 12),
                   CurrencyDropdown(billFormData: billFormData),
                 const SizedBox(height: 28),
-                sectionHeader(
+                SectionHeader(
                   icon: Icons.shopping_bag_outlined,
                   title: "Items",
                 ),
@@ -306,7 +283,7 @@ class _AddBillFormState extends State<AddBillForm> {
 
                 const SizedBox(height: 28),
 
-                sectionHeader(
+                SectionHeader(
                   icon: Icons.people_outline,
                   title: "Participants",
                 ),
@@ -401,7 +378,6 @@ class _AddBillFormState extends State<AddBillForm> {
                   },
                 ),
                 const SizedBox(height: 4),
-
                 Center(
                   child: OutlinedButton.icon(
                     onPressed: () {
@@ -433,9 +409,6 @@ class _AddBillFormState extends State<AddBillForm> {
                   child: FilledButton.icon(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        setState(() {
-                          loading = true;
-                        });
                         submitBill();
                       }
                     },

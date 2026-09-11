@@ -1,9 +1,11 @@
 import 'package:bill_splitter/data/currency_map.dart';
 import 'package:bill_splitter/models/bill.dart';
 import 'package:bill_splitter/providers/bill_provider.dart';
-import 'package:bill_splitter/screens/Home/add_bill_form.dart';
+import 'package:bill_splitter/screens/add_bill_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../widgets/section_header.dart';
 
 class BillDetails extends StatelessWidget {
   final String billID;
@@ -69,29 +71,6 @@ class BillDetails extends StatelessWidget {
       },
     );
   }
-  Widget sectionHeader({required IconData icon, required String title}) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.amber.withOpacity(0.12),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(icon, color: Colors.amber, size: 20),
-        ),
-        const SizedBox(width: 10),
-        Text(
-          title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    );
-  }
   @override
   Widget build(BuildContext context) {
     final billList = Provider.of<BillProvider>(context).billList;
@@ -133,7 +112,7 @@ class BillDetails extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              sectionHeader(icon: Icons.receipt_long_outlined, title: "Total"),
+              SectionHeader(icon: Icons.receipt_long_outlined, title: "Total"),
               const SizedBox(height: 12),
               Container(
                 width: double.infinity,
@@ -156,7 +135,7 @@ class BillDetails extends StatelessWidget {
               ),
 
               const SizedBox(height: 28),
-              sectionHeader(icon: Icons.shopping_bag_outlined, title: "Items"),
+              SectionHeader(icon: Icons.shopping_bag_outlined, title: "Items"),
               const SizedBox(height: 12),
 
               Container(
@@ -242,7 +221,7 @@ class BillDetails extends StatelessWidget {
               ),
 
               const SizedBox(height: 28),
-              sectionHeader(icon: Icons.people_outline, title: "Participants"),
+              SectionHeader(icon: Icons.people_outline, title: "Participants"),
               const SizedBox(height: 12),
 
               Container(
