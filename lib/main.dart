@@ -2,9 +2,10 @@ import 'package:bill_splitter/firebase_options.dart';
 import 'package:bill_splitter/models/user.dart';
 import 'package:bill_splitter/providers/bill_provider.dart';
 import 'package:bill_splitter/services/auth.dart';
-import 'package:bill_splitter/screens/Home/add_bill_form.dart';
+import 'package:bill_splitter/screens/add_bill_form.dart';
 import 'package:bill_splitter/services/bill_service.dart';
 import 'package:bill_splitter/wrapper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +34,7 @@ class BillSplitter extends StatelessWidget {
     );
     return MultiProvider(
       providers: [
-        StreamProvider<UserModel?>.value(
+        StreamProvider<User?>.value(
           value: AuthService().user,
           initialData: null,
         ),
