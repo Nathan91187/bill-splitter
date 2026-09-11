@@ -9,7 +9,26 @@ class BillList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final billList = Provider.of<BillProvider>(context).billList;
-    return GridView.builder(
+    return billList.isEmpty? Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.receipt_long_outlined,
+            color: Colors.grey.withOpacity(0.25),
+            size: 60,
+          ),
+          SizedBox(width: 10,),
+          Text(
+            "No Bills to Show",
+            style: TextStyle(
+                color: Colors.grey.withOpacity(0.25),
+                fontSize: 20
+            ),
+          )
+        ],
+      ),
+    ) : GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2
         ),
