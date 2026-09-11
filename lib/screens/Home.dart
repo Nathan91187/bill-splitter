@@ -1,8 +1,8 @@
 import 'package:bill_splitter/providers/bill_provider.dart';
-import 'package:bill_splitter/screens/Home/groups.dart';
+import 'package:bill_splitter/screens/groups/groups.dart';
 import 'package:bill_splitter/services/auth.dart';
 import 'package:bill_splitter/shared/loading.dart';
-import 'package:bill_splitter/screens/Home/add_bill_form.dart';
+import 'package:bill_splitter/screens/add_bill_form.dart';
 import 'package:bill_splitter/widgets/bill_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -77,7 +77,6 @@ class _HomeState extends State<Home> {
   bool loading = false;
   @override
   Widget build(BuildContext context) {
-    final billList = Provider.of<BillProvider>(context).billList;
     return loading? Loading(): Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -125,14 +124,57 @@ class _HomeState extends State<Home> {
               title: Text(
                   "Groups",
                   style: TextStyle(
-                    color: Colors.amber,
+                    color: Colors.white,
                     fontWeight: FontWeight.w600
                   ),
               ),
               onTap: (){
+                Navigator.pop(context);
                 Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => Groups()));
+              },
+            ),
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.amber.withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.mail_outlined, color: Colors.amber, size: 20),
+              ),
+              title: Text(
+                "Invites",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600
+                ),
+              ),
+              onTap: (){
+                Navigator.pop(context);
+                confirmLogout(context);
+              },
+            ),
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.amber.withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.edit, color: Colors.amber, size: 20),
+              ),
+              title: Text(
+                "Edit Profile",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600
+                ),
+              ),
+              onTap: (){
+                Navigator.pop(context);
+                confirmLogout(context);
               },
             ),
             ListTile(
@@ -147,7 +189,7 @@ class _HomeState extends State<Home> {
               title: Text(
                   "Logout",
                 style: TextStyle(
-                    color: Colors.amber,
+                    color: Colors.white,
                   fontWeight: FontWeight.w600
                 ),
               ),
@@ -159,25 +201,7 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-      body: billList.isEmpty ? Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.receipt_long_outlined,
-              color: Colors.grey.withOpacity(0.25),
-              size: 60,
-            ),
-            Text(
-                "No Bills to Show",
-                style: TextStyle(
-                  color: Colors.grey.withOpacity(0.25),
-                  fontSize: 20
-                ),
-            )
-          ],
-        ),
-      ) : Container(
+      body: Container(
         padding: EdgeInsets.all(20),
         child: BillList()
       ),
