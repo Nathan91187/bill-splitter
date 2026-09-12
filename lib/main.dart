@@ -1,6 +1,7 @@
 import 'package:bill_splitter/firebase_options.dart';
 import 'package:bill_splitter/models/user.dart';
 import 'package:bill_splitter/providers/bill_provider.dart';
+import 'package:bill_splitter/providers/group_provider.dart';
 import 'package:bill_splitter/services/auth.dart';
 import 'package:bill_splitter/screens/add_bill_form.dart';
 import 'package:bill_splitter/services/bill_service.dart';
@@ -38,7 +39,12 @@ class BillSplitter extends StatelessWidget {
           value: AuthService().user,
           initialData: null,
         ),
+        ChangeNotifierProvider(
+          create: (_) => BillProvider(),
 
+        ),
+        ChangeNotifierProvider(
+            create: (_) => GroupProvider())
           // StreamProvider<List<Bill>>.value(
           //     value: BillService().bills, initialData: []),
 

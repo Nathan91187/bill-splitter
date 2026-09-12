@@ -33,18 +33,9 @@ class Wrapper extends StatelessWidget {
         if(namedUser == null){
           return const DisplayNameForm();
         }
-        return MultiProvider(
-            providers: [
-              ChangeNotifierProvider(
-                create: (_) => BillProvider(),
-
-              ),
-              ChangeNotifierProvider(
-                  create: (_) => GroupProvider())
-            ],
-            child: const MaterialApp(
-              home: Home(),
-            ));
+        return const MaterialApp(
+          home: Home(),
+        );
       },
     );
   }
