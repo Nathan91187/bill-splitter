@@ -4,6 +4,7 @@ import 'package:bill_splitter/services/auth.dart';
 import 'package:bill_splitter/shared/loading.dart';
 import 'package:bill_splitter/screens/add_bill_form.dart';
 import 'package:bill_splitter/widgets/bill_list.dart';
+import 'package:bill_splitter/widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,65 +14,7 @@ class Home extends StatefulWidget {
   @override
   State<Home> createState() => _HomeState();
 }
-void confirmLogout(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (dialogContext) {
-      return AlertDialog(
-        backgroundColor: const Color(0xFF111111),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: const BorderSide(color: Colors.amber, width: 1.5),
-        ),
-        title: const Row(
-          children: [
-            Icon(Icons.logout, color: Colors.amber),
-            SizedBox(width: 10),
-            Text(
-              "Logout?",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-        content: const Text(
-          "Are you sure you want to logout",
-          style: TextStyle(color: Colors.white70, height: 1.4),
-        ),
-        actions: [
-          FilledButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-            },
-            style: FilledButton.styleFrom(
-                backgroundColor: Colors.grey
-            ),
-            child: const Text(
-              "Cancel",
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-          FilledButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              AuthService().signOut();
-            },
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.amber,
-              foregroundColor: Colors.black,
-            ),
-            child: const Text(
-              "Logout",
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-          ),
-        ],
-      );
-    },
-  );
-}
+
 class _HomeState extends State<Home> {
   final auth = AuthService();
   bool loading = false;
@@ -153,7 +96,6 @@ class _HomeState extends State<Home> {
               ),
               onTap: (){
                 Navigator.pop(context);
-                confirmLogout(context);
               },
             ),
             ListTile(
@@ -174,7 +116,6 @@ class _HomeState extends State<Home> {
               ),
               onTap: (){
                 Navigator.pop(context);
-                confirmLogout(context);
               },
             ),
             ListTile(
@@ -193,9 +134,16 @@ class _HomeState extends State<Home> {
                   fontWeight: FontWeight.w600
                 ),
               ),
-              onTap: (){
+              onTap: () async {
                 Navigator.pop(context);
-                confirmLogout(context);
+                ConfirmationDialog().showConfirmationDialog(
+                    context,
+                    "Logout?",
+                    "Are you sure you want to logout",
+                    "Cancel",
+                    "Logout",
+                    () => AuthService().signOut(),
+                    Icons.logout);
               },
             )
           ],
