@@ -11,19 +11,27 @@ class UserService {
     });
   }
   Future<UserModel?> findUserById(String uid) async{
-    final doc = await userCollection.doc(uid).get();
-    if(!doc.exists){
-      return null;
+    try {
+      final doc = await userCollection.doc(uid).get();
+      if(!doc.exists){
+        return null;
+      }
+      return UserModel(uid: doc.id, displayName: doc['display_name'], email: doc['email']);
+    } on FirebaseException catch (e) {
+      throw Exception(e.code);
     }
-    return UserModel(uid: doc.id, displayName: doc['display_name'], email: doc['email']);
   }
   Future<UserModel?> findUserByEmail(String email) async{
-    final snapshot = await userCollection.where('email' , isEqualTo: email).get();
-    if(snapshot.docs.isEmpty){
-      return null;
+    try {
+      final snapshot = await userCollection.where('email' , isEqualTo: email.trim().toLowerCase()).get(const GetOptions(source: Source.server));
+      if(snapshot.docs.isEmpty){
+        return null;
+      }
+      final doc = snapshot.docs.first;
+      return UserModel(uid: doc.id, displayName: doc['display_name'], email: doc['email']);
+    } on FirebaseException catch (e) {
+      throw Exception(e.code);
     }
-    final doc = snapshot.docs.first;
-    return UserModel(uid: doc.id, displayName: doc['display_name'], email: doc['email']);
   }
-  Future<UserModel>findUserByIds
+
 }
