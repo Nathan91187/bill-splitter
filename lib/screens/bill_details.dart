@@ -35,7 +35,7 @@ class BillDetails extends StatelessWidget {
           ),
           content: const Text(
             "Are you sure you want to delete this bill? "
-            "This action cannot be undone.",
+                "This action cannot be undone.",
             style: TextStyle(color: Colors.white70, height: 1.4),
           ),
           actions: [
@@ -44,7 +44,7 @@ class BillDetails extends StatelessWidget {
                 Navigator.pop(dialogContext);
               },
               style: FilledButton.styleFrom(
-                backgroundColor: Colors.grey
+                  backgroundColor: Colors.grey
               ),
               child: const Text(
                 "Cancel",
@@ -103,7 +103,7 @@ class BillDetails extends StatelessWidget {
           ),
         ],
         iconTheme: IconThemeData(
-          color: Colors.black
+            color: Colors.black
         ),
       ),
       body: SafeArea(
@@ -177,7 +177,7 @@ class BillDetails extends StatelessWidget {
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         expense.description,
@@ -190,7 +190,7 @@ class BillDetails extends StatelessWidget {
                                       const SizedBox(height: 3),
                                       Text(
                                         "${expense.quantity} × "
-                                        "${currencyMap.currencyMap[bill.currency]} ${expense.price.toStringAsFixed(2)}",
+                                            "${currencyMap.currencyMap[bill.currency]} ${expense.price.toStringAsFixed(2)}",
                                         style: const TextStyle(
                                           color: Colors.white54,
                                           fontSize: 13,
@@ -267,29 +267,29 @@ class BillDetails extends StatelessWidget {
                                 Text(
                                   "${currencyMap.currencyMap[bill.currency]} ${(bill.totalAmount / bill.participants.length).toStringAsFixed(2)}",
                                   style: TextStyle(
-                                    color: Colors.amber,
-                                    fontWeight: FontWeight.w600
+                                      color: Colors.amber,
+                                      fontWeight: FontWeight.w600
                                   ),
                                 ),
                                 SizedBox(width: 5,),
                                 if(index != 0)
-                                Container(
-                                  decoration: BoxDecoration(
-                                   borderRadius: BorderRadius.circular(4),
-                                    color: participant.hasPaid ? Colors.amber.withOpacity(0.12) : Colors.grey.withOpacity(0.12),
-                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      color: participant.hasPaid ? Colors.amber.withOpacity(0.12) : Colors.grey.withOpacity(0.12),
+                                    ),
 
-                                  padding: EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-                                  child: Text(
-                                    participant.hasPaid ? 'Paid' : 'Not paid',
-                                    style: TextStyle(
-                                      color: participant.hasPaid
-                                          ? Colors.amber
-                                          : Colors.grey,
-                                      fontWeight: FontWeight.w600,
+                                    padding: EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                                    child: Text(
+                                      participant.hasPaid ? 'Paid' : 'Not paid',
+                                      style: TextStyle(
+                                        color: participant.hasPaid
+                                            ? Colors.amber
+                                            : Colors.grey,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                   ),
-                                ),
                               ],
                             ),
 
