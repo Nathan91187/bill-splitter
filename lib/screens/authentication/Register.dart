@@ -1,4 +1,4 @@
-import 'package:bill_splitter/data/auth_errors.dart';
+import 'package:bill_splitter/data/error_messages.dart';
 import 'package:bill_splitter/screens/authentication/authenticate.dart';
 import 'package:bill_splitter/services/auth.dart';
 import 'package:bill_splitter/shared/common.dart';
@@ -91,7 +91,6 @@ class _RegisterState extends State<Register> {
                         return "Enter a valid email";
                       }
                       return null;
-
                   },
                 ),
               ),
@@ -127,11 +126,11 @@ class _RegisterState extends State<Register> {
                       error = '';
                     });
                     try {
-                      await auth.register(email.trim(), password);
+                      await auth.register(email.trim().toLowerCase(), password);
                     }on FirebaseAuthException catch (e) {
                       setState(() {
                         loading = false;
-                        error = AuthErrors().authErrorMessages[e.code] ?? 'Something went wrong. Please try again.';
+                        error = ErrorMessages().errorMessages[e.code] ?? 'Something went wrong. Please try again.';
                       });
                     }
                 }},

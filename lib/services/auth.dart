@@ -14,7 +14,7 @@ class AuthService{
     return auth.authStateChanges();
   }
   Future signInWithEmailAndPassword(String email, String password) async{
-      await auth.signInWithEmailAndPassword(email: email, password: password);
+      await auth.signInWithEmailAndPassword(email: email.toLowerCase().trim(), password: password);
     }
   Future register(String email, String password) async{
     await auth.createUserWithEmailAndPassword(email: email, password: password);

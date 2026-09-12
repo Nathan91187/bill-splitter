@@ -3,7 +3,7 @@ import 'package:bill_splitter/shared/common.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../data/auth_errors.dart';
+import '../../data/error_messages.dart';
 import '../../shared/loading.dart';
 
 class SignIn extends StatefulWidget {
@@ -124,7 +124,7 @@ class _SignInState extends State<SignIn> {
                        }on FirebaseAuthException catch (e) {
                          setState(() {
                            loading = false;
-                           error = AuthErrors().authErrorMessages[e.code] ?? 'Something went wrong. Please try again.';
+                           error = ErrorMessages().errorMessages[e.code] ?? 'Something went wrong. Please try again.';
                          });
                        }
                      }
