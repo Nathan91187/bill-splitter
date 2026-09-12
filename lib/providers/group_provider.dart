@@ -27,5 +27,8 @@ class GroupProvider extends ChangeNotifier{
   Future<void> removeGroup(String groupID) async{
     await groupService.removeGroup(groupID);
   }
+  Future<void> removeMember(String groupID,String memberID)async{
+    await groupService.removeMember(memberID, groupID);
+  }
 
 }
