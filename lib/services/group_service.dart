@@ -30,4 +30,28 @@ class GroupService {
   Future<void> removeGroup(String groupID) async{
      await groupCollection.doc(groupID).delete();
   }
+  Future<void> removeMember(String memberId,String groupID) async{
+    await groupCollection.doc(groupID).update({
+     'member_ids' : FieldValue.arrayRemove([memberId])}
+   );
+  }
+  Future<void> addMember(String groupID, String memberID)async{
+    await groupCollection.doc(groupID).update({
+      'member_ids' : FieldValue.arrayUnion([memberID])}
+    );
+  }
+  Future<BillGroup?> findGroupByID(String groupID)async{
+    try {
+      final docRef = await groupCollection.doc(groupID).get(GetOptions(source: Source.server));
+      if(!docRef.exists){
+        return null;
+      }
+      return BillGroup(groupID: docRef.id,
+          creatorID: docRef['creator_id'],
+          groupName: docRef['name'],
+          memberIDs: List<String>.from(docRef['member_ids']));
+    } on FirebaseException catch (e) {
+     throw Exception(e.code);
+    }
+  }
 }
