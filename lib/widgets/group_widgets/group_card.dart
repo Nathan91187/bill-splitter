@@ -16,7 +16,7 @@ class GroupCard extends StatelessWidget {
         InkWell(
           onTap: (){
             Navigator.push(context, MaterialPageRoute(
-                builder: (context)=> GroupDetails(billGroup: billGroup))
+                builder: (context)=> GroupDetails(groupID: billGroup.groupID!))
             );
           },
           child: ListTile(
