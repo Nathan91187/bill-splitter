@@ -1,6 +1,10 @@
 import 'package:bill_splitter/data/bill_form_data.dart';
 import 'package:bill_splitter/models/bill.dart';
+import 'package:bill_splitter/models/bill_group.dart';
+import 'package:bill_splitter/models/user.dart';
 import 'package:bill_splitter/providers/bill_provider.dart';
+import 'package:bill_splitter/providers/group_provider.dart';
+import 'package:bill_splitter/services/user_service.dart';
 import 'package:bill_splitter/shared/common.dart';
 import 'package:bill_splitter/shared/loading.dart';
 import 'package:bill_splitter/widgets/currency_dropdown.dart';
@@ -27,14 +31,28 @@ class _AddBillFormState extends State<AddBillForm> {
   final _formKey = GlobalKey<FormState>();
   final billFormData = BillFormData();
   final uid = FirebaseAuth.instance.currentUser!.uid;
+  final userService = UserService();
+  late Future<List<UserModel>> membersFuture;
   bool loading = false;
+  Future<List<UserModel>> loadMembers()async{
+    final groupProvider = context.read<GroupProvider>();
+    final group = await groupProvider.groupService.findGroupByID(widget.groupID!);
+    if(group == null){
+      return [];
+    }
+    final users = await Future.wait(
+        group.memberIDs.map((memberId)=> userService.findUserById(memberId))
+    );
+    return users.whereType<UserModel>().toList();
+  }
   @override
   void initState() {
     super.initState();
-
+    membersFuture = loadMembers();
     if (widget.bill != null) {
       billFormData.fromBill(widget.bill!);
     }
+
   }
 
   @override
@@ -49,12 +67,11 @@ class _AddBillFormState extends State<AddBillForm> {
     });
     final billProvider = context.read<BillProvider>();
       await billProvider.addBill(
-        billFormData.createBill(uid,widget.bill));
+        billFormData.createBill(uid,widget.bill,widget.groupID));
     if(mounted){
       Navigator.pop(context);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -105,10 +122,6 @@ class _AddBillFormState extends State<AddBillForm> {
                     decoration: textFieldDecoration.copyWith(
                       hintText: "Bill Name",
 
-                      // prefixIcon: const Icon(
-                      //   Icons.edit_outlined,
-                      //   color: Colors.amber,
-                      // ),
                     ),
                   ),
                 ),
@@ -285,11 +298,11 @@ class _AddBillFormState extends State<AddBillForm> {
 
                 SectionHeader(
                   icon: Icons.people_outline,
-                  title: "Participants",
+                  title: widget.groupID == null ? "Participants" : "Select Participants",
                 ),
 
                 const SizedBox(height: 12),
-
+                  if(widget.groupID  == null)
                 ...billFormData.participants.asMap().entries.map(
                       (entry) {
                     final index = entry.key;
@@ -318,10 +331,6 @@ class _AddBillFormState extends State<AddBillForm> {
                               decoration:
                               textFieldDecoration.copyWith(
                                 hintText: "Participant Name",
-                                // prefixIcon: const Icon(
-                                //   Icons.person_outline,
-                                //   color: Colors.amber,
-                                // ),
                               ),
                             ),
                           ),
@@ -378,6 +387,7 @@ class _AddBillFormState extends State<AddBillForm> {
                   },
                 ),
                 const SizedBox(height: 4),
+                if(widget.groupID == null)
                 Center(
                   child: OutlinedButton.icon(
                     onPressed: () {
@@ -401,7 +411,92 @@ class _AddBillFormState extends State<AddBillForm> {
                       ),
                     ),
                   ),
-                ),
+                ),if(widget.groupID != null)
+                         FutureBuilder<List<UserModel>>(
+                          future: membersFuture,
+                          builder: (context, userSnapshot){
+                            if(userSnapshot.connectionState == ConnectionState.waiting){
+                              return const Loading();
+                            }
+                            if(userSnapshot.hasError){
+                              return const Text(
+                                "Failed to load members",
+                                style: TextStyle(
+                                    color: Colors.white
+                                ),
+                              );
+                            }
+                            final users = userSnapshot.data ?? [];
+                            return Column(
+                              children: users.where((user) => user.uid != uid).map((user){
+                                return ListTile(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                  ),
+                                  leading: Container(
+                                    padding: const EdgeInsets.all(7),
+                                    decoration: BoxDecoration(
+                                      color: Colors.amber.withOpacity(0.12),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.person_outline,
+                                      color: Colors.amber,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  title: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              user.displayName,
+                                              style: const TextStyle(
+                                                color: Colors.amber,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 3),
+                                            Text(
+                                              user.email,
+                                              style: const TextStyle(
+                                                color: Colors.white54,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ),
+                                      Checkbox(
+                                        value: billFormData.selectedMembers.any((selectedMember)=> selectedMember.uid == user.uid),
+                                        activeColor: Colors.grey,
+                                        checkColor: Colors.black,
+                                        visualDensity: VisualDensity.compact,
+                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            if(value == true){
+                                              billFormData.selectedMembers.add(user);
+                                            }
+                                            else{
+                                              billFormData.selectedMembers.removeWhere((selectedMember)=> selectedMember.uid == user.uid);
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+
+                                );
+                              }).toList(),
+                            );
+                          },
+                        ),
+
                 const SizedBox(height: 50),
                 SizedBox(
                   width: double.infinity,
