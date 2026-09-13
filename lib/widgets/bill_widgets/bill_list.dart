@@ -1,5 +1,5 @@
 import 'package:bill_splitter/providers/bill_provider.dart';
-import 'package:bill_splitter/widgets/bill_card.dart';
+import 'package:bill_splitter/widgets/bill_widgets/bill_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
