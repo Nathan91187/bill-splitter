@@ -1,21 +1,33 @@
+import 'package:bill_splitter/models/bill_group.dart';
+import 'package:bill_splitter/models/group_invite.dart';
+import 'package:bill_splitter/models/user.dart';
+import 'package:bill_splitter/providers/invite_provider.dart';
+import 'package:bill_splitter/services/group_service.dart';
+import 'package:bill_splitter/services/invite_service.dart';
+import 'package:bill_splitter/services/user_service.dart';
+import 'package:bill_splitter/shared/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class InviteCard extends StatelessWidget {
-  final String senderName;
-  final String groupName;
-  final Future<void> Function() onAccept;
-  final Future<void> Function() onReject;
+class InviteCard extends StatefulWidget {
+  final GroupInvite groupInvite;
 
   const InviteCard({
     super.key,
-    required this.senderName,
-    required this.groupName,
-    required this.onAccept,
-    required this.onReject,
+    required this.groupInvite
+
   });
 
   @override
+  State<InviteCard> createState() => _InviteCardState();
+}
+
+class _InviteCardState extends State<InviteCard> {
+  bool loading = false;
+  @override
   Widget build(BuildContext context) {
+    final inviteService = InviteService();
+    final inviteProvider = Provider.of<InviteProvider>(context);
     return Card(
       color: const Color(0xFF111111),
       shape: RoundedRectangleBorder(
@@ -44,21 +56,65 @@ class InviteCard extends StatelessWidget {
 
             const SizedBox(height: 14),
 
-            Text(
-              '$senderName invited you to join',
-              style: const TextStyle(color: Colors.white70, fontSize: 14),
-            ),
+            FutureBuilder<UserModel?>(
+                future: UserService().findUserById(widget.groupInvite.senderID),
+                builder: (context,user){
+                  if (user.connectionState == ConnectionState.waiting) {
+                    return const SizedBox(
+                      height: 15,
+                      width: 15,
+                      child: CircularProgressIndicator(
+                        color: Colors.grey,
+                      ),
+                    );
+                  }
+                  if(user.hasError){
+                    return const Text(
+                      "Failed to load user",
+                      style: TextStyle(
+                          color: Colors.white
+                      ),
+                    );
+                  }
+                  final senderName = user.data?.displayName ?? "An anonymous user";
+                  return Text(
+                    '$senderName invited you to join',
+                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                  );
+                }),
 
             const SizedBox(height: 4),
 
-            Text(
-              groupName,
-              style: const TextStyle(
-                color: Colors.amber,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            FutureBuilder<BillGroup?>(
+                future: GroupService().findGroupByID(widget.groupInvite.groupID),
+                builder: (context,group){
+                  if (group.connectionState == ConnectionState.waiting) {
+                    return const SizedBox(
+                      height: 15,
+                      width: 15,
+                      child: CircularProgressIndicator(
+                        color: Colors.grey,
+                      ),
+                    );
+                  }
+                  if(group.hasError){
+                    return const Text(
+                      "Failed to load group",
+                      style: TextStyle(
+                          color: Colors.white
+                      ),
+                    );
+                  }
+                  final groupName = group.data!.groupName;
+                  return Text(
+                    groupName,
+                    style: const TextStyle(
+                      color: Colors.amber,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  );
+                }),
 
             const SizedBox(height: 16),
 
@@ -66,7 +122,9 @@ class InviteCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 FilledButton(
-                  onPressed: onReject,
+                  onPressed: () async{
+                    await inviteService.rejectInvitation(widget.groupInvite.inviteID!);
+                  },
                   style: FilledButton.styleFrom(
                     backgroundColor: Colors.grey,
                     foregroundColor: Colors.black,
@@ -77,16 +135,36 @@ class InviteCard extends StatelessWidget {
                 const SizedBox(width: 10),
 
                 FilledButton(
-                  onPressed: onAccept,
+                  onPressed: () async{
+                      try {
+                        await inviteProvider.acceptInvitation(widget.groupInvite);
+                        if(context.mounted){
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Joined group successfully'),
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        if(context.mounted){
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Failed to join group'),
+                            ),
+                          );
+                        }
+                      }
+                  },
                   style: FilledButton.styleFrom(
                     backgroundColor: Colors.amber,
                     foregroundColor: Colors.black,
                   ),
-                  child: const Text(
-                    'Accept',
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                  child: const Text('Accept',
+                          style: TextStyle(
+                                fontWeight: FontWeight.w600
+    ),
+    ),
                   ),
-                ),
               ],
             ),
           ],
