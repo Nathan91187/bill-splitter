@@ -1,5 +1,5 @@
 import 'package:bill_splitter/providers/group_provider.dart';
-import 'package:bill_splitter/widgets/group_card.dart';
+import 'package:bill_splitter/widgets/group_widgets/group_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 class GroupList extends StatelessWidget {
