@@ -19,10 +19,25 @@ class InviteProvider extends ChangeNotifier{
     _inviteSubscription?.cancel();
     super.dispose();
   }
-  Future<void> acceptInvitation(String inviteID) async{
-    await inviteService.acceptInvitation(inviteID);
-  }
+
   Future<void> rejectInvitation(String inviteID) async{
     await inviteService.rejectInvitation(inviteID);
+  }
+  void removeInvite(GroupInvite invite) {
+    inviteList.remove(invite);
+    notifyListeners();
+  }
+  void restoreInvite(GroupInvite invite){
+    inviteList.add(invite);
+    notifyListeners();
+  }
+  Future<void> acceptInvitation(GroupInvite invite) async{
+    removeInvite(invite);
+    try {
+      await inviteService.acceptInvitation(invite.inviteID!);
+    } catch (e) {
+      restoreInvite(invite);
+      rethrow;
+    }
   }
 }
