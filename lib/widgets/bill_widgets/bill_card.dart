@@ -12,6 +12,7 @@ class BillCard extends StatelessWidget {
   @override
 
   Widget build(BuildContext context) {
+
     final currencyMap = CurrencyMap();
     return InkWell(
       onTap: (){
@@ -62,12 +63,15 @@ class BillCard extends StatelessWidget {
               Expanded(
                 flex: 3,
                   child: Center(
-                    child: Text(
-                      "${currencyMap.currencyMap[bill.currency]} ${bill.totalAmount.toStringAsFixed(1)}",
-                      style: TextStyle(
-                        color: Colors.amber,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        "${currencyMap.currencyMap[bill.currency]} ${bill.totalAmount.toStringAsFixed(1)}",
+                        style: TextStyle(
+                          color: Colors.amber,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold
+                        ),
                       ),
                     ),
                   ),
