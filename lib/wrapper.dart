@@ -1,6 +1,7 @@
 import 'package:bill_splitter/models/user.dart';
 import 'package:bill_splitter/providers/bill_provider.dart';
 import 'package:bill_splitter/providers/group_provider.dart';
+import 'package:bill_splitter/providers/invite_provider.dart';
 import 'package:bill_splitter/screens/Home.dart';
 import 'package:bill_splitter/screens/groups/groups.dart';
 import 'package:bill_splitter/screens/authentication/display_name_form.dart';
@@ -33,8 +34,23 @@ class Wrapper extends StatelessWidget {
         if(namedUser == null){
           return const DisplayNameForm();
         }
-        return const MaterialApp(
-          home: Home(),
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+                create: (_) => GroupProvider()),
+            ChangeNotifierProvider(
+              create: (_) => BillProvider(),
+
+            ),
+
+            ChangeNotifierProvider(
+              create: (_) => InviteProvider(),
+
+            ),
+          ],
+          child: const MaterialApp(
+            home: Home(),
+          ),
         );
       },
     );
