@@ -32,23 +32,23 @@ class _CreateGroupFormState extends State<CreateGroupForm> {
      titleController.text = widget.billGroup!.groupName;
    }
   }
+
+  Future<void> submitGroup() async{
+    setState(() {
+      loading = true;
+    });
+    final groupProvider = context.read<GroupProvider>();
+    await groupProvider.addGroup(BillGroup(groupID: widget.billGroup?.groupID,creatorID: creatorID, groupName: titleController.text, memberIDs: [creatorID]));
+    if(mounted){
+      Navigator.pop(context);
+    }
+  }
   @override
   void dispose(){
     super.dispose();
     titleController.dispose();
 
   }
-  Future<void> submitGroup() async{
-    setState(() {
-      loading = true;
-    });
-    final groupProvider = context.read<GroupProvider>();
-    await groupProvider.addGroup(BillGroup(creatorID: creatorID, groupName: titleController.text, memberIDs: [creatorID]));
-    if(mounted){
-      Navigator.pop(context);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return loading ? Loading() : Scaffold(
