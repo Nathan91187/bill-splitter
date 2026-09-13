@@ -30,5 +30,14 @@ class GroupProvider extends ChangeNotifier{
   Future<void> removeMember(String groupID,String memberID)async{
     await groupService.removeMember(memberID, groupID);
   }
+  BillGroup? getGroupById(String groupID) {
+    for (final group in groupList) {
+      if (group.groupID == groupID) {
+        return group;
+      }
+    }
+
+    return null;
+  }
 
 }
