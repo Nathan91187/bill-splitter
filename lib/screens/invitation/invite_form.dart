@@ -9,7 +9,7 @@ import 'package:bill_splitter/shared/loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../models/user.dart';
+import '../../models/user.dart';
 class InviteForm extends StatefulWidget {
   final String groupID;
   const InviteForm({
@@ -210,6 +210,11 @@ class _InviteFormState extends State<InviteForm> {
                           }
                           if(context.mounted){
                             Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Invitation sent successfully'),
+                              ),
+                            );
                           }
                         }
                       },
