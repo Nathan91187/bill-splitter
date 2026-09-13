@@ -9,9 +9,9 @@ class InviteList extends StatelessWidget {
   const InviteList({super.key});
   @override
   Widget build(BuildContext context) {
-    final userService = UserService();
 
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.grey,
         title: Text(
@@ -46,11 +46,12 @@ class InviteList extends StatelessWidget {
           );
         }
         return Padding(
-          padding: EdgeInsets.all(16),
-          child: ListView.builder(
-              itemBuilder: (context,index) async{
-                final senderName = await userService.findUserById(inviteList[index].senderID)
-                return InviteCard(senderName: userService.findUserById(uid), groupName: groupName, onAccept: onAccept, onReject: onReject)
+          padding: const EdgeInsets.all(16),
+          child: ListView.separated(
+            separatorBuilder: (_,_) => const SizedBox(height: 12),
+            itemCount: inviteList.length,
+              itemBuilder: (context,index) {
+                return InviteCard(groupInvite: inviteList[index]);
               }),
         );
       }),
