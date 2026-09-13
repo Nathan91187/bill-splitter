@@ -1,7 +1,7 @@
 
 import 'package:bill_splitter/providers/group_provider.dart';
 import 'package:bill_splitter/screens/groups/create_group_form.dart';
-import 'package:bill_splitter/widgets/group_list.dart';
+import 'package:bill_splitter/widgets/group_widgets/group_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,6 +25,7 @@ class Groups extends StatelessWidget {
               fontWeight: FontWeight.w600
           ),
         ),
+
             ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 15),
