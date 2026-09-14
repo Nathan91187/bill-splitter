@@ -50,9 +50,8 @@ class _AddBillFormState extends State<AddBillForm> {
     super.initState();
     membersFuture = loadMembers();
     if (widget.bill != null) {
-      billFormData.fromBill(widget.bill!);
+      billFormData.fromBill(widget.bill!, widget.groupID);
     }
-
   }
 
   @override
@@ -427,6 +426,7 @@ class _AddBillFormState extends State<AddBillForm> {
                               );
                             }
                             final users = userSnapshot.data ?? [];
+                            billFormData.currUser = users.firstWhere((user)=> user.uid == uid);
                             return Column(
                               children: users.where((user) => user.uid != uid).map((user){
                                 return ListTile(
@@ -471,6 +471,19 @@ class _AddBillFormState extends State<AddBillForm> {
                                           ],
                                         )
                                       ),
+                                      if(widget.bill != null)
+                                        Checkbox(
+                                          activeColor: Colors.grey,
+                                          checkColor: Colors.black,
+                                          visualDensity: VisualDensity.compact,
+                                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                          value: billFormData.;
+                                          onChanged: (_) {
+                                            setState(() {
+                                              billFormData.toggleHasPaid(index);
+                                            });
+                                          },
+                                        ),
                                       Checkbox(
                                         value: billFormData.selectedMembers.any((selectedMember)=> selectedMember.uid == user.uid),
                                         activeColor: Colors.grey,
