@@ -2,6 +2,7 @@ import 'package:bill_splitter/data/currency_map.dart';
 import 'package:bill_splitter/models/bill.dart';
 import 'package:bill_splitter/providers/bill_provider.dart';
 import 'package:bill_splitter/screens/add_bill_form.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,7 +10,10 @@ import '../widgets/section_header.dart';
 
 class BillDetails extends StatelessWidget {
   final String billID;
-  const BillDetails({super.key, required this.billID});
+  const BillDetails({
+    super.key,
+    required this.billID,
+  });
   void confirmDelete(BuildContext context) {
     showDialog(
       context: context,
@@ -75,6 +79,7 @@ class BillDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final billList = Provider.of<BillProvider>(context).billList;
     Bill bill = billList.firstWhere((test) => test.billID == billID);
+    final currUser = FirebaseAuth.instance.currentUser!.uid;
     final currencyMap = CurrencyMap();
     return Scaffold(
       backgroundColor: Colors.black87,
@@ -88,15 +93,17 @@ class BillDetails extends StatelessWidget {
           ),
         ),
         actions: [
+          if(bill.creatorID == currUser)
           IconButton(
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => AddBillForm(bill: bill)),
+                MaterialPageRoute(builder: (_) => AddBillForm(bill: bill,groupID: bill.groupID,)),
               );
             },
             icon: const Icon(Icons.edit_outlined, color: Colors.black),
           ),
+          if(bill.creatorID == currUser)
           IconButton(
             onPressed: () => confirmDelete(context),
             icon: const Icon(Icons.delete_outline, color: Colors.black),
@@ -272,6 +279,23 @@ class BillDetails extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(width: 5,),
+                                if(index == 0)
+                                  if(bill.groupID != null)
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      color: participant.hasPaid ? Colors.amber.withOpacity(0.12) : Colors.grey.withOpacity(0.12),
+                                    ),
+
+                                    padding: EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                                    child: Text(
+                                      'Creator',
+                                      style: TextStyle(
+                                        color: Colors.amber,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
                                 if(index != 0)
                                   Container(
                                     decoration: BoxDecoration(
