@@ -18,7 +18,7 @@ class BillCard extends StatelessWidget {
       onTap: (){
         Navigator.push(context, MaterialPageRoute(
             builder: (context) => BillDetails(
-                billID: bill.billID
+                billID: bill.billID,
             )
         )
         );

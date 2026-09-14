@@ -1,5 +1,6 @@
 import 'package:bill_splitter/models/bill_group.dart';
 import 'package:bill_splitter/models/user.dart';
+import 'package:bill_splitter/providers/bill_provider.dart';
 import 'package:bill_splitter/providers/group_provider.dart';
 import 'package:bill_splitter/screens/add_bill_form.dart';
 import 'package:bill_splitter/screens/groups/create_group_form.dart';
@@ -7,6 +8,7 @@ import 'package:bill_splitter/screens/invitation/invite_form.dart';
 import 'package:bill_splitter/services/group_service.dart';
 import 'package:bill_splitter/services/user_service.dart';
 import 'package:bill_splitter/shared/loading.dart';
+import 'package:bill_splitter/widgets/bill_widgets/bill_list.dart';
 import 'package:bill_splitter/widgets/confirmation_dialog.dart';
 import 'package:bill_splitter/widgets/section_header.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,9 +27,15 @@ class GroupDetails extends StatefulWidget {
 }
 
 class _GroupDetailsState extends State<GroupDetails> {
+  @override
+  void initState(){
+    super.initState();
+  context.read<BillProvider>().listenGroupBills(widget.groupID);
+  }
   bool loading = false;
   final userService = UserService();
   final currUser = FirebaseAuth.instance.currentUser!;
+  late UserModel passedUser;
   @override
   Widget build(BuildContext context) {
 
@@ -220,24 +228,7 @@ class _GroupDetailsState extends State<GroupDetails> {
             children: [
               SectionHeader(icon: Icons.receipt_long_outlined, title: "Bills"),
               SizedBox(height: 12,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.receipt_long_outlined,
-                    color: Colors.grey.withOpacity(0.25),
-                    size: 60,
-                  ),
-                  SizedBox(width: 10,),
-                  Text(
-                    "No Bills To Show",
-                    style: TextStyle(
-                        color: Colors.grey.withOpacity(0.25),
-                        fontSize: 20
-                    ),
-                  )
-                ],
-              ),
+              BillList(groupId: widget.groupID,),
               SizedBox(height: 12,),
               SectionHeader(icon: Icons.group, title: "Members"),
               SizedBox(height: 12),

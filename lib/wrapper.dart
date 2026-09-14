@@ -15,9 +15,18 @@ import 'package:provider/provider.dart';
 
 import 'models/bill.dart';
 
-class Wrapper extends StatelessWidget {
+class Wrapper extends StatefulWidget {
   const Wrapper({super.key});
 
+  @override
+  State<Wrapper> createState() => _WrapperState();
+}
+
+class _WrapperState extends State<Wrapper> {
+  void onProfileCompleted(){
+    setState(() {
+    });
+  }
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
@@ -32,7 +41,9 @@ class Wrapper extends StatelessWidget {
         }
         final namedUser = snapshot.data;
         if(namedUser == null){
-          return const DisplayNameForm();
+          return DisplayNameForm(
+            onCompleted:onProfileCompleted,
+          );
         }
         return MultiProvider(
           providers: [
