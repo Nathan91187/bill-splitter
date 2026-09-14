@@ -7,13 +7,23 @@ class BillProvider extends ChangeNotifier{
   final billService = BillService();
   List <Bill> billList = [];
   StreamSubscription<List<Bill>>? _billSubscription;
-  BillProvider(){
-
-    _billSubscription = billService.bills.listen((bills){
+  Future<void> listenStandaloneBills() async {
+    await _billSubscription?.cancel();
+    _billSubscription = billService.bills.listen((bills) {
       billList = bills;
       notifyListeners();
     });
   }
+  Future<void> listenGroupBills(String groupID) async {
+
+    await _billSubscription?.cancel();
+    _billSubscription = billService.getGroupBills(groupID).listen((bills) {
+      billList = bills;
+      notifyListeners();
+    });
+  }
+
+
   @override
   void dispose(){
     _billSubscription?.cancel();
