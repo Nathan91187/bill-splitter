@@ -3,6 +3,7 @@ import 'package:bill_splitter/models/bill.dart';
 import 'package:bill_splitter/models/expense.dart';
 import 'package:bill_splitter/models/participant.dart';
 import 'package:bill_splitter/models/user.dart';
+import 'package:bill_splitter/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,7 @@ class BillFormData {
   String currency = "ETB";
   TextEditingController titleController = TextEditingController();
   Set<UserModel> selectedMembers = {};
+  UserModel? currUser;
   List<Map<String, TextEditingController>> expenseFields = [
     {'name': TextEditingController(),
       'price' : TextEditingController(),
@@ -20,7 +22,7 @@ class BillFormData {
       textEditingController: TextEditingController(),
   )];
 
-  void fromBill(Bill bill){
+  Future<void> fromBill(Bill bill, String? groupID) async {
     currency = bill.currency;
     titleController.text = bill.title;
     expenseFields = bill.expenses.map((expense) {
@@ -37,14 +39,22 @@ class BillFormData {
       };
     }
     ).toList();
-    participants = bill.participants.map((participant) {
-      return ParticipantField(
-          textEditingController: TextEditingController(
-            text: participant.name
-          ),
-        hasPaid: participant.hasPaid
-      );
-    }).toList();
+    if (groupID == null) {
+      participants = bill.participants.map((participant) {
+        return ParticipantField(
+            textEditingController: TextEditingController(
+              text: participant.name
+            ),
+          hasPaid: participant.hasPaid
+        );
+      }).toList();
+    }
+    else{
+      final users = await Future.wait(
+          bill.participants.map((participant) => UserService().findUserById(participant.uid!)
+      ));
+      selectedMembers = users.whereType<UserModel>().toSet();
+    }
   }
   void addParticipantField(){
       participants.add(
@@ -91,12 +101,19 @@ class BillFormData {
       }
     }
     else {
-
+        if(bill == null){
+          participantList.add(Participant(
+              name: currUser!.displayName,
+              hasPaid: false,
+              uid: currUser!.uid
+          ));
+        }
       for(final selected in selectedMembers){
         participantList.add(Participant(name: selected.displayName, hasPaid: false, uid: selected.uid));
       }
     }
     return Bill(
+      groupID: groupId,
         billID: bill == null ? "" : bill.billID,
         createdAt: bill == null ? DateTime.now() : bill.createdAt,
         creatorID: uid,
@@ -106,9 +123,7 @@ class BillFormData {
         totalAmount: totalAmount,
       currency: currency
     );
-
   }
-
   void dispose(){
     for(final expense in expenseFields){
       expense['name']?.dispose();
