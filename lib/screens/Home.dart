@@ -154,7 +154,7 @@ class _HomeState extends State<Home> {
       ),
       body: Container(
         padding: EdgeInsets.all(20),
-        child: BillList()
+        child: SingleChildScrollView(child: BillList())
       ),
       floatingActionButton: FloatingActionButton(
         shape: RoundedRectangleBorder(
