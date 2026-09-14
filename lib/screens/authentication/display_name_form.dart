@@ -10,8 +10,10 @@ import 'package:flutter/material.dart';
 import '../../shared/common.dart';
 
 class DisplayNameForm extends StatefulWidget {
+  final VoidCallback onCompleted;
   const DisplayNameForm({
     super.key,
+    required this.onCompleted
   });
 
   @override
@@ -28,13 +30,10 @@ class _DisplayNameFormState extends State<DisplayNameForm> {
       loading = true;
     });
     await UserService().saveUser(userModel);
+    if(!mounted) return;
+    return widget.onCompleted();
 
-    if (mounted) {
-      Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context) => const MaterialApp(
-            home: Home(),
-          )));
-    }
+
   }
   @override
   Widget build(BuildContext context) {
