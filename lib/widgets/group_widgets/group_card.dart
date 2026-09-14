@@ -1,6 +1,9 @@
 import 'package:bill_splitter/models/bill_group.dart';
+import 'package:bill_splitter/providers/bill_provider.dart';
 import 'package:bill_splitter/screens/groups/group_details.dart';
+import 'package:bill_splitter/services/bill_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class GroupCard extends StatelessWidget {
   final BillGroup billGroup;
@@ -14,10 +17,14 @@ class GroupCard extends StatelessWidget {
     return Column(
       children: [
         InkWell(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(
+          onTap: () async{
+            BillService().groupId = billGroup.groupID;
+           await Navigator.push(context, MaterialPageRoute(
                 builder: (context)=> GroupDetails(groupID: billGroup.groupID!))
             );
+                if(context.mounted){
+              context.read<BillProvider>().listenStandaloneBills();
+            }
           },
           child: ListTile(
             minTileHeight: 50,
