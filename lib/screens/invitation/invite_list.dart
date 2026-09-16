@@ -2,6 +2,7 @@ import 'package:bill_splitter/models/user.dart';
 import 'package:bill_splitter/providers/invite_provider.dart';
 import 'package:bill_splitter/services/user_service.dart';
 import 'package:bill_splitter/widgets/invite_card.dart';
+import 'package:bill_splitter/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +22,7 @@ class InviteList extends StatelessWidget {
           ),
         ),
       ),
+      drawer: MainDrawer(),
       body: Consumer<InviteProvider>(builder: (context,inviteProvider,child){
         final inviteList = inviteProvider.inviteList;
         if(inviteList.isEmpty) {

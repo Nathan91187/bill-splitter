@@ -2,6 +2,7 @@
 import 'package:bill_splitter/providers/group_provider.dart';
 import 'package:bill_splitter/screens/groups/create_group_form.dart';
 import 'package:bill_splitter/widgets/group_widgets/group_list.dart';
+import 'package:bill_splitter/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,9 +17,7 @@ class Groups extends StatelessWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.grey,
-        leading: IconButton(onPressed: () {
-          Navigator.pop(context);
-        }, icon: Icon(Icons.arrow_back,)),
+
         title: Text(
           "Groups",
           style: TextStyle(
@@ -27,9 +26,12 @@ class Groups extends StatelessWidget {
         ),
 
             ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 15),
-        child: GroupList(),
+      drawer: MainDrawer(),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 15),
+          child: GroupList(),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         shape: RoundedRectangleBorder(
