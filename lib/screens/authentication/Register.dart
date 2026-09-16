@@ -66,17 +66,8 @@ class _RegisterState extends State<Register> {
           child: Column(
             children: [
               SizedBox(height: 20),
-              Container(
-                margin: const EdgeInsets.only(bottom: 10),
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF111111),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.amber,
-                  )
-                ),
-                child: TextFormField(
+                TextFormField(
+                  style: textFieldTextStyle,
                     onChanged: (val) => email = val,
                     decoration: textFieldDecoration.copyWith(hintText: "Email"),
                   validator: (val) {
@@ -93,19 +84,9 @@ class _RegisterState extends State<Register> {
                       return null;
                   },
                 ),
-              ),
               SizedBox(height: 20),
-              Container(
-                margin: const EdgeInsets.only(bottom: 10),
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF111111),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.amber,
-                  )
-                ),
-                child: TextFormField(
+                TextFormField(
+                  style: textFieldTextStyle,
                   obscureText: true,
                   onChanged: (val) => password = val,
                   decoration: textFieldDecoration.copyWith(hintText: "Password"),
@@ -116,7 +97,6 @@ class _RegisterState extends State<Register> {
                     return null;
                   },
                 ),
-              ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {

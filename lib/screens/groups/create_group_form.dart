@@ -75,15 +75,8 @@ class _CreateGroupFormState extends State<CreateGroupForm> {
           children: [
             SectionHeader(icon: Icons.group_outlined, title: "Group Name"),
             const SizedBox(height: 12,),
-            Container(
-              margin: const EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color(0xFF111111),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all( color: Colors.amber,),
-              ),
-              child: TextFormField(
+            TextFormField(
+              style: textFieldTextStyle,
                 controller: titleController,
                 validator: (val) {
                   if (val == null || val.trim().isEmpty) {
@@ -95,7 +88,6 @@ class _CreateGroupFormState extends State<CreateGroupForm> {
                   hintText: "Group Name",
                 ),
               ),
-            ),
              SizedBox(height: 28,),
              SizedBox(
                width: double.infinity,

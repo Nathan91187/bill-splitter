@@ -50,63 +50,54 @@ class _InviteFormState extends State<InviteForm> {
                   ...controllers.asMap().entries.map((entry) {
                     final index = entry.key;
                     final controller = entry.value;
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 10),
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF111111),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.amber,),
-                      ),
-                      child: Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: controller,
-                                validator: (val) {
-                                  if(val == null || val.isEmpty){
-                                    return "Email can't be empty";
-                                  }
-                                  final emailRegex = RegExp(
-                                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                                  );
+                    return Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              style: textFieldTextStyle,
+                              controller: controller,
+                              validator: (val) {
+                                if(val == null || val.isEmpty){
+                                  return "Email can't be empty";
+                                }
+                                final emailRegex = RegExp(
+                                  r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                                );
 
-                                  if (!emailRegex.hasMatch(val.trim())) {
-                                    return "Enter a valid email";
-                                  }
-                                  return null;
+                                if (!emailRegex.hasMatch(val.trim())) {
+                                  return "Enter a valid email";
+                                }
+                                return null;
 
-                                },
-                                decoration:
-                                textFieldDecoration.copyWith(
-                                  hintText: "Receiver Email",
-                                  errorText: errors[index]
-                                ),
+                              },
+                              decoration:
+                              textFieldDecoration.copyWith(
+                                hintText: "Receiver Email",
+                                errorText: errors[index]
                               ),
                             ),
+                          ),
 
-                            if (index != 0)
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    controllers[index].dispose();
-                                    controllers.removeAt(index);
-                                    errors.removeAt(index);
-                                  });
-                                },
-                                icon: const Icon(
-                                  Icons.delete_outline,
-                                  color: Colors.amber,
-                                ),
+                          if (index != 0)
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  controllers[index].dispose();
+                                  controllers.removeAt(index);
+                                  errors.removeAt(index);
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.delete_outline,
+                                color: Colors.amber,
                               ),
-                          ]),
-                    );
+                            ),
+                        ]);
                   }
                   ),
                   SizedBox(height: 12,),
                   OutlinedButton.icon(
                     onPressed: () {
-                      print('ADD RECEIVER CLICKED');
 
                       setState(() {
                         controllers.add(TextEditingController());

@@ -55,27 +55,24 @@ class _DisplayNameFormState extends State<DisplayNameForm> {
             children: [
               SectionHeader(icon: Icons.person, title: "User Name"),
               const SizedBox(height: 12,),
-              Container(
-                margin: const EdgeInsets.only(bottom: 10),
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF111111),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all( color: Colors.amber,),
-                ),
-                child: TextFormField(
+              TextFormField(
+                style: textFieldTextStyle,
                   controller: nameController,
-                  validator: (val) {
-                    if (val == null || val.trim().isEmpty) {
-                      return "User Name is required";
-                    }
-                    return null;
-                  },
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Name is required';
+                  }
+
+                  if (value.trim().length < 2) {
+                    return 'Name must be at least 2 characters';
+                  }
+
+                  return null;
+                },
                   decoration: textFieldDecoration.copyWith(
                     hintText: "User Name",
                   ),
                 ),
-              ),
               SizedBox(height: 28,),
               SizedBox(
                 width: double.infinity,
