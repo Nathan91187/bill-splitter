@@ -7,52 +7,69 @@ import 'package:provider/provider.dart';
 
 class GroupCard extends StatelessWidget {
   final BillGroup billGroup;
-  const GroupCard({
-    super.key,
-    required this.billGroup
-  });
+
+  const GroupCard({super.key, required this.billGroup});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         InkWell(
-          onTap: () async{
+          borderRadius: BorderRadius.circular(10),
+          onTap: () async {
             BillService().groupId = billGroup.groupID;
-           await Navigator.push(context, MaterialPageRoute(
-                builder: (context)=> GroupDetails(groupID: billGroup.groupID!))
+
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => GroupDetails(groupID: billGroup.groupID!),
+              ),
             );
-                if(context.mounted){
+
+            if (context.mounted) {
               context.read<BillProvider>().listenStandaloneBills();
             }
           },
-          child: ListTile(
-            minTileHeight: 50,
-            contentPadding: EdgeInsets.all(5),
-            leading: Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.amber.withOpacity(0.12),
-                shape: BoxShape.circle
-              ),
-              child: Icon(
-                Icons.group,
-                color: Colors.amber,
-                size: 30,
-              ),
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF111111),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.white12),
             ),
-            title: Text(
-                billGroup.groupName,
-                style: TextStyle(
-                  color: Colors.amber,
-                  fontWeight: FontWeight.w600
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(9),
+                  decoration: BoxDecoration(
+                    color: Colors.amber.withOpacity(0.12),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.group, color: Colors.amber, size: 26),
                 ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    billGroup.groupName,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.amber,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Icon(
+                  Icons.chevron_right,
+                  color: Colors.white38,
+                  size: 22,
+                ),
+              ],
             ),
           ),
         ),
-        Divider(
-          color: Colors.white12,height: 1,
-        )
       ],
     );
   }

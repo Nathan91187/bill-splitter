@@ -12,6 +12,8 @@ class BillFormData {
   TextEditingController titleController = TextEditingController();
   Set<UserModel> selectedMembers = {};
   UserModel? currUser;
+  List<Participant> participantList = [];
+  Map<String,bool> paymentStatus = {};
   List<Map<String, TextEditingController>> expenseFields = [
     {'name': TextEditingController(),
       'price' : TextEditingController(),
@@ -49,11 +51,18 @@ class BillFormData {
         );
       }).toList();
     }
-    else{
+    else {
       final users = await Future.wait(
-          bill.participants.map((participant) => UserService().findUserById(participant.uid!)
-      ));
+        bill.participants.map(
+              (participant) => UserService().findUserById(participant.uid!),
+        ),
+      );
+
       selectedMembers = users.whereType<UserModel>().toSet();
+
+      for (final participant in bill.participants) {
+        paymentStatus[participant.uid!] = participant.hasPaid;
+      }
     }
   }
   void addParticipantField(){
@@ -91,7 +100,6 @@ class BillFormData {
       expenses.add(Expense(price: price, description: expense['name']!.text, quantity: quantity));
       totalAmount +=  price * quantity;
     }
-    List<Participant> participantList = [];
     if (groupId == null) {
       if(bill == null) {
         participantList.add(Participant(name: "You", hasPaid: false));
@@ -109,7 +117,7 @@ class BillFormData {
           ));
         }
       for(final selected in selectedMembers){
-        participantList.add(Participant(name: selected.displayName, hasPaid: false, uid: selected.uid));
+        participantList.add(Participant(name: selected.displayName, hasPaid: paymentStatus[selected.uid] ?? false, uid: selected.uid));
       }
     }
     return Bill(

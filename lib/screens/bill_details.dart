@@ -123,14 +123,16 @@ class BillDetails extends StatelessWidget {
               const SizedBox(height: 12),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 20),
+                padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 20),
                 decoration: BoxDecoration(
                   color: Colors.grey,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.amber, width: 1.5),
+                  // border: Border.all(color: Colors.amber, width: 1.5),
                 ),
                 child: Center(
                   child: Text(
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     "${currencyMap.currencyMap[bill.currency]} ${bill.totalAmount.toStringAsFixed(2)}",
                     style: const TextStyle(
                       color: Colors.black,
@@ -265,55 +267,76 @@ class BillDetails extends StatelessWidget {
                                 Expanded(
                                   child: Text(
                                     participant.name,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ),
-                                Text(
-                                  "${currencyMap.currencyMap[bill.currency]} ${(bill.totalAmount / bill.participants.length).toStringAsFixed(2)}",
-                                  style: TextStyle(
-                                      color: Colors.amber,
-                                      fontWeight: FontWeight.w600
+
+                                const SizedBox(width: 6),
+
+                                Flexible(
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.centerRight,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          "${currencyMap.currencyMap[bill.currency]} "
+                                              "${(bill.totalAmount / bill.participants.length).toStringAsFixed(2)}",
+                                          style: const TextStyle(
+                                            color: Colors.amber,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+
+                                        const SizedBox(width: 5),
+
+                                        if (bill.groupID != null && participant.uid == bill.creatorID)
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 4,
+                                              vertical: 2,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(4),
+                                              color: Colors.amber.withOpacity(0.12),
+                                            ),
+                                            child: const Text(
+                                              'Creator',
+                                              style: TextStyle(
+                                                color: Colors.amber,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ),
+
+                                        if (participant.uid != bill.creatorID)
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 3,
+                                              vertical: 1,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(4),
+                                              color: Colors.grey.withOpacity(0.12),
+                                            ),
+                                            child: Text(
+                                              participant.hasPaid ? 'Paid' : 'Not paid',
+                                              style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                SizedBox(width: 5,),
-                                if(index == 0)
-                                  if(bill.groupID != null)
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
-                                      color: participant.hasPaid ? Colors.amber.withOpacity(0.12) : Colors.grey.withOpacity(0.12),
-                                    ),
-
-                                    padding: EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-                                    child: Text(
-                                      'Creator',
-                                      style: TextStyle(
-                                        color: Colors.amber,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                if(index != 0)
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
-                                      color: participant.hasPaid ? Colors.amber.withOpacity(0.12) : Colors.grey.withOpacity(0.12),
-                                    ),
-
-                                    padding: EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-                                    child: Text(
-                                      participant.hasPaid ? 'Paid' : 'Not paid',
-                                      style: TextStyle(
-                                        color: participant.hasPaid
-                                            ? Colors.amber
-                                            : Colors.grey,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
                               ],
                             ),
 

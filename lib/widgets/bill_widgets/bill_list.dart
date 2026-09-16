@@ -50,8 +50,10 @@ class _BillListState extends State<BillList> {
         ) : GridView.builder(
           shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 220,
+              crossAxisSpacing: 7,
+              mainAxisSpacing: 7,
             ),
             itemCount: billProvider.billList.length,
             itemBuilder: (context,index){

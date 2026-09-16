@@ -39,7 +39,7 @@ class BillService {
     await billCollection.doc(billID).delete();
   }
   List<Bill> _billListFromSnapshot(QuerySnapshot snapshot){
-    return snapshot.docs.map((doc){
+    final bills =  snapshot.docs.map((doc){
       return Bill(
           billID: doc.id,
           groupID: doc['group_id'],
@@ -63,6 +63,8 @@ class BillService {
           currency: doc['currency']
       );
     }).toList();
+    bills.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return bills;
   }
   Stream <List<Bill>> get bills{
     return billCollection.where('is_group', isEqualTo: false).where('creator_id' , isEqualTo: uid).snapshots().map(_billListFromSnapshot);
