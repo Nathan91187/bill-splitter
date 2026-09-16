@@ -221,131 +221,149 @@ class _GroupDetailsState extends State<GroupDetails> {
 
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            children: [
-              SectionHeader(icon: Icons.receipt_long_outlined, title: "Bills"),
-              SizedBox(height: 12,),
-              BillList(groupId: widget.groupID,),
-              SizedBox(height: 12,),
-              SectionHeader(icon: Icons.group, title: "Members"),
-              SizedBox(height: 12),
-              FutureBuilder<List<UserModel>>(
-                  future: getUsers(),
-                  builder: (context,member){
-                    if(member.hasError){
-                      return const Text(
-                          "Failed to load members",
-                        style: TextStyle(
-                          color: Colors.white
-                        ),
-                      );
-                    }
-                    final users = member.data ?? [];
-                    if(member.connectionState == ConnectionState.waiting){
-                      return Loading();
-                    }
-                    return Column(
-                      children: users.map((eachMember){
-                        return ListTile(
-                          leading: Container(
-                            padding: const EdgeInsets.all(7),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.12),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.person_outline,
-                              color: Colors.grey,
-                              size: 20,
-                            ),
-                          ),
-                          title: Row(
-                            children: [
-                              Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        eachMember.displayName,
-                                        style: const TextStyle(
-                                          color: Colors.amber,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 3),
-                                      Text(
-                                        eachMember.email,
-                                        style: const TextStyle(
-                                          color: Colors.white54,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                    ],
-                                  )),
-                              if(currUser.uid == billGroup.creatorID && eachMember.uid != currUser.uid)
-                                IconButton(
-                                    onPressed: () => ConfirmationDialog().showConfirmationDialog(
-                                      context,
-                                      "Remove Member?",
-                                      "Are you sure you want to remove ${eachMember.displayName} from this group?",
-                                      "Cancel",
-                                      "Remove",
-                                          () async {
-                                        await groupProvider.removeMember(
-                                          billGroup.groupID!,
-                                          eachMember.uid,
-                                        );
-                                      },
-                                      Icons.person_remove_outlined,
-                                    ),
-                                    icon: Icon(
-                                      Icons.delete_outline_outlined,
-                                      color: Colors.grey,
-                                    )),
-                              if(eachMember.uid == currUser.uid && eachMember.uid != billGroup.creatorID)
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: Colors.grey.withOpacity(0.12),
-                                  ),
-
-                                  padding: EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-                                  child: Text(
-                                    'You',
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              if(eachMember.uid == billGroup.creatorID)
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: Colors.amber.withOpacity(0.12),
-                                  ),
-
-                                  padding: EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-                                  child: Text(
-                                    'Creator',
-                                    style: TextStyle(
-                                      color: Colors.amber,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                            ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                SectionHeader(icon: Icons.receipt_long_outlined, title: "Bills"),
+                SizedBox(height: 12,),
+                BillList(groupId: widget.groupID,),
+                SizedBox(height: 12,),
+                SectionHeader(icon: Icons.group, title: "Members"),
+                SizedBox(height: 12),
+                FutureBuilder<List<UserModel>>(
+                    future: getUsers(),
+                    builder: (context,member){
+                      if(member.hasError){
+                        return const Text(
+                            "Failed to load members",
+                          style: TextStyle(
+                            color: Colors.white
                           ),
                         );
-                      }).toList()
-                    );
-              })
-            ],
+                      }
+                      final users = member.data ?? [];
+                      if(member.connectionState == ConnectionState.waiting){
+                        return Loading();
+                      }
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF111111),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.white12),
+                        ),
+                        child: Column(
+                          children: users.asMap().entries.map((entry){
+                            final eachMember = entry.value;
+                            final index = entry.key;
+                            return Column(
+                              children: [
+                                ListTile(
+                                  leading: Container(
+                                    padding: const EdgeInsets.all(7),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.withOpacity(0.12),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.person_outline,
+                                      color: Colors.amber,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  title: Row(
+                                    children: [
+                                      Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                eachMember.displayName,
+                                                style: const TextStyle(
+                                                  color: Colors.amber,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 3),
+                                              Text(
+                                                eachMember.email,
+                                                style: const TextStyle(
+                                                  color: Colors.white54,
+                                                  fontSize: 13,
+                                                ),
+                                              ),
+                                            ],
+                                          )),
+                                      if(currUser.uid == billGroup.creatorID && eachMember.uid != currUser.uid)
+                                        IconButton(
+                                            onPressed: () => ConfirmationDialog().showConfirmationDialog(
+                                              context,
+                                              "Remove Member?",
+                                              "Are you sure you want to remove ${eachMember.displayName} from this group?",
+                                              "Cancel",
+                                              "Remove",
+                                                  () async {
+                                                await groupProvider.removeMember(
+                                                  billGroup.groupID!,
+                                                  eachMember.uid,
+                                                );
+                                              },
+                                              Icons.person_remove_outlined,
+                                            ),
+                                            icon: Icon(
+                                              Icons.delete_outline_outlined,
+                                              color: Colors.grey,
+                                            )),
+                                      if(eachMember.uid == currUser.uid && eachMember.uid != billGroup.creatorID)
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(4),
+                                            color: Colors.grey.withOpacity(0.12),
+                                          ),
+        
+                                          padding: EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                                          child: Text(
+                                            'You',
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      if(eachMember.uid == billGroup.creatorID)
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(4),
+                                            color: Colors.amber.withOpacity(0.12),
+                                          ),
+        
+                                          padding: EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                                          child: Text(
+                                            'Creator',
+                                            style: TextStyle(
+                                              color: Colors.amber,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+        
+                                  const Divider(color: Colors.white12, height: 1),
+                              ],
+                            );
+        
+                          }).toList()
+                        ),
+                      );
+                })
+              ],
+            ),
           ),
         ),
       ),
